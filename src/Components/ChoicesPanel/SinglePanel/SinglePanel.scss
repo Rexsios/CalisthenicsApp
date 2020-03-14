@@ -1,0 +1,39 @@
+@import '../../../index.scss';
+
+.singlePanel {
+    margin: 10px 5px;
+    padding: 10px;
+    border: 1px solid $borderColor;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+
+    &:hover,
+    &:focus {
+        @include hover();
+    }
+
+    &__image {
+        margin-bottom: 20px;
+    }
+
+    &__title {
+        margin-bottom: 20px;
+    }
+
+    &__button {
+        margin-top: auto;
+    }
+
+    &__description {
+        font-size: 17px;
+    }
+}
+
+@media (min-width: 768px) {
+
+    .singlePanel {
+        @include centerDiv();
+        height: 70vh;
+    }
+}

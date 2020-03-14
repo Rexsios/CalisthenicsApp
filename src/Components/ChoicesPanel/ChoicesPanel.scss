@@ -1,0 +1,33 @@
+@import '../../index.scss';
+
+.choicesPanel {
+
+    @include mainContainer();
+
+    &__title {
+
+        &__text {
+            text-align: center;
+            @include centerDiv();
+        }
+
+        &__icon {
+            margin-left: 20px;
+        }
+    }
+
+}
+
+@media (min-width: 768px) {
+
+    .choicesPanel {
+        &__titleWraper {
+            height: 10vh;
+        }
+
+
+        &__choices {
+            height: 90vh;
+        }
+    }
+}
