@@ -1,13 +1,18 @@
 import React from 'react'
 import './App.scss'
 
-import { Container, Row, Col } from 'react-bootstrap'
+import { Route, Switch } from 'react-router-dom'
+
+import { Content } from './Content/Content'
+import { LoginPage } from './LoginPage/LoginPage'
+
 
 function App() {
   return (
-    <Container>
-      <Row></Row>
-    </Container>
+    <Switch>
+      <Route path="/login" component={LoginPage} />
+      <Route path="/" component={Content} />
+    </Switch>
   );
 }
 
