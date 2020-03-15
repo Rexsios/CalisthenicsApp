@@ -4,7 +4,7 @@ export class ProgressPanel extends Component {
     render() {
         return (
             <div>
-
+                3
             </div>
         )
     }

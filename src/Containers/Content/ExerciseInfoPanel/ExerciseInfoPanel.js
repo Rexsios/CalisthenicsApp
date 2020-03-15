@@ -4,7 +4,7 @@ export class ExerciseInfoPanel extends Component {
     render() {
         return (
             <div>
-
+                2
             </div>
         )
     }

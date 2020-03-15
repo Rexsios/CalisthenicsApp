@@ -1,19 +1,22 @@
-import React from 'react'
+import React, { Component } from 'react'
 import './App.scss'
 
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 import { Content } from './Content/Content'
 import { LoginPage } from './LoginPage/LoginPage'
 
 
-function App() {
-  return (
-    <Switch>
-      <Route path="/login" component={LoginPage} />
-      <Route path="/" component={Content} />
-    </Switch>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Switch>
+        <Route path="/login" component={LoginPage} />
+        <Route path="/aplikacja" component={Content} />
+        <Redirect path="/" to="/aplikacja" />
+      </Switch >
+    );
+  }
 }
 
 export default App;

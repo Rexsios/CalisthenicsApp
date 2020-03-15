@@ -10,6 +10,7 @@ import SinglePanel from './SinglePanel/SinglePanel'
 
 const choicesPanel = (props) => {
     const title = ["Ćwiczenia", "Poodgląd ćwiczeń", "Progress"]
+    const link = ["/trening", "/informacje", "/postepy"]
     const description = [
         "Zapisz swoje postępy i zobacz co dziś należy ćwiczyć.",
         "Przeglądaj wszystykie dostępne ćwiczenia z kalisteniki. Sprawdź co robisz źle oraz jak należy poprawić wykonywane ćwiczenie.",
@@ -28,13 +29,13 @@ const choicesPanel = (props) => {
             </Row>
             <Row className="choicesPanel__choices">
                 <Col md={4}>
-                    <SinglePanel {...props} number="0" title={title[0]} description={description[0]} />
+                    <SinglePanel {...props}  number="0" title={title[0]} description={description[0]} link={link[0]} />
                 </Col>
                 <Col md={4}>
-                    <SinglePanel {...props} number="1" title={title[1]} description={description[1]} />
+                    <SinglePanel {...props} number="1" title={title[1]} description={description[1]} link={link[1]} />
                 </Col>
                 <Col md={4}>
-                    <SinglePanel {...props} number="2" title={title[2]} description={description[2]} />
+                    <SinglePanel {...props} number="2" title={title[2]} description={description[2]} link={link[2]} />
                 </Col>
             </Row>
         </Container>

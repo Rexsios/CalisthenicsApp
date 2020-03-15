@@ -1,6 +1,8 @@
 import React from 'react'
 import './SinglePanel.scss'
 
+import { Link } from 'react-router-dom'
+
 import FirstPanel from '../../../Assets/Svg/ChoicesPanelIcons/FirstPanel'
 import SecondPanel from '../../../Assets/Svg/ChoicesPanelIcons/SecondPanel'
 import ThirdPanel from '../../../Assets/Svg/ChoicesPanelIcons/ThirdPanel'
@@ -17,7 +19,7 @@ const singlePanel = (props) => {
     }
 
     return (
-        <div className="singlePanel" onKeyPress={() => props.choice(props.number)} onClick={() => props.choice(props.number)} tabIndex="0">
+        <Link to={props.match.url + props.link} className="singlePanel" tabIndex="0">
             <div className="singlePanel__image">
                 {svgShow}
             </div>
@@ -27,7 +29,7 @@ const singlePanel = (props) => {
             <span className="singlePanel__description">
                 {props.description}
             </span>
-        </div>
+        </Link>
     )
 }
 
