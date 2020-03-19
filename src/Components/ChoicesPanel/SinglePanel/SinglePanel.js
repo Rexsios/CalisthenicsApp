@@ -11,7 +11,7 @@ const singlePanel = (props) => {
 
     let svgShow = null;
     if (props.number === "0") {
-        svgShow = <FirstPanel />
+        svgShow = <FirstPanel className="test"/>
     } else if (props.number === "1") {
         svgShow = <SecondPanel />
     } else if (props.number === "2") {

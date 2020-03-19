@@ -6,9 +6,15 @@
 
     &__title {
 
+        margin-top: 20px;
+
         &__text {
             text-align: center;
             @include centerDiv();
+            width: 90%;
+            border-bottom: 1px solid white;
+            margin: 0 auto;
+            padding-bottom: 20px;
         }
 
         &__icon {
@@ -21,6 +27,7 @@
 @media (min-width: 768px) {
 
     .choicesPanel {
+
         &__titleWraper {
             height: 10vh;
         }

@@ -1,0 +1,12 @@
+@import '../../../index.scss';
+
+.workout {
+    @include mainContainer();
+}
+
+@media (min-width: 768px) {
+
+    .workout {
+        height:100vh;
+    }
+}

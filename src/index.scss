@@ -1,6 +1,10 @@
 @import '~bootstrap/scss/bootstrap.scss';
 
-$backgroundMainColor:rgb(240, 240, 240);
+body {
+  background-image: url('./Assets/Images/background.jpg');
+}
+
+$backgroundMainColor: rgb(47, 46, 51);
 $timeDuration: 0.4s;
 $borderColor: rgba(131, 131, 131, 0.6);
 $lessImportantColor: #a0a0a0;
@@ -24,4 +28,5 @@ $oppositeColor: #0072bc;
 @mixin mainContainer () {
   background-color: $backgroundMainColor;
   border-radius: 5px;
+  color: #fff;
 }
