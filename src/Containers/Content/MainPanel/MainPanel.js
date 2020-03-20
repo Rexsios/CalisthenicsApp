@@ -14,7 +14,7 @@ export class MainPanel extends Component {
     }
 
     componentDidMount() {
-        const user = axios.get('https://sportplan-addc3.firebaseio.com/Users/id.json')
+        axios.get('https://sportplan-addc3.firebaseio.com/Users/id.json')
             .then(response => {
                 this.setState({
                     user: response.data
@@ -22,16 +22,26 @@ export class MainPanel extends Component {
             })
     }
     render() {
-        console.log(this.state.user)
+
+        let show = null;
+        if (this.state.user !== null) {
+            let { bridge, legRaising, pushUps, pushUpsOnHands, rising, squads } = { ...this.state.user.workoutType }
+            
+            show = (
+                <>
+                    <SingleWorkoutManage workout={bridge} />
+                    <SingleWorkoutManage workout={legRaising} />
+                    <SingleWorkoutManage workout={pushUps} />
+                    <SingleWorkoutManage workout={pushUpsOnHands} />
+                    <SingleWorkoutManage workout={rising} />
+                    <SingleWorkoutManage workout={squads} />
+                </>
+            )
+        }
         return (
-            <Container className="workout">
+            <Container className="workout" >
                 <Row>
-                    <SingleWorkoutManage />
-                    <SingleWorkoutManage />
-                    <SingleWorkoutManage />
-                    <SingleWorkoutManage />
-                    <SingleWorkoutManage />
-                    <SingleWorkoutManage />
+                    {show}
                 </Row>
             </Container>
         )

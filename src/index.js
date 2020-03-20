@@ -4,12 +4,19 @@ import './index.scss';
 import App from './Containers/App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom'
+import WebFont from 'webfontloader';
 
 const app = (
     <BrowserRouter>
         <App />
     </BrowserRouter>
 )
+
+WebFont.load({
+    google: {
+        families: ['Titillium Web:300,400,700', 'sans-serif', 'Sriracha:400', 'Roboto:400']
+    }
+});
 
 ReactDOM.render(app, document.getElementById('root'));
 
