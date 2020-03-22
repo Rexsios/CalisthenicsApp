@@ -4,9 +4,9 @@ import './SingleWorkoutManage.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
-import { Col, Button } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
 
-import PushUps from '../../Assets/Svg/SingleWorkoutManage/PushUps'
+import WorkoutSvg from '../../Assets/Svg/SingleWorkoutManage/WorkoutSvg'
 
 const SingleWorkoutManage = (props) => {
     const lastNumberOfSeries = props.workout.numberOfSeries[props.workout.numberOfSeries.length - 1]
@@ -14,6 +14,23 @@ const SingleWorkoutManage = (props) => {
 
     const [currentNumber, changeCurrentNumber] = useState(lastNumberOfSeries)
     const [currentQuantity, changeQuantity] = useState(lastquantityInSeries)
+
+    const handleButton = () => {
+        if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) return null
+        let newNumberOfSeries = props.workout.numberOfSeries
+        newNumberOfSeries.push(currentNumber)
+        let newNumberOfQuantity = props.workout.quantityInSeries
+        newNumberOfQuantity.push(currentQuantity)
+
+        let data = {
+            id: props.workout.id,
+            name: props.workout.name,
+            level: props.workout.level,
+            numberOfSeries: newNumberOfSeries,
+            quantityInSeries: newNumberOfQuantity
+        }
+        props.handleConfirmButton(data)
+    }
 
     return (
         <Col md={4} className="singleWorkoutWrapper">
@@ -26,7 +43,7 @@ const SingleWorkoutManage = (props) => {
                         <h6>Poziom: {props.workout.level} </h6>
                         <h6>Ilosc: {lastNumberOfSeries} x {lastquantityInSeries}</h6>
                     </div>
-                        <PushUps className="singleWorkout__last__image"></PushUps>
+                    <WorkoutSvg id={props.workout.id} className="singleWorkout__last__image"></WorkoutSvg>
                 </div>
                 <div className="singleWorkout__current">
                     <h4 className="singleWorkout__current__title">Dziś robisz</h4>
@@ -49,7 +66,7 @@ const SingleWorkoutManage = (props) => {
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faPlus} />
                         </button>
                     </div>
-                    <button className="singleWorkout__current__button">Zaczynamy!</button>
+                    <button className="singleWorkout__current__button" onClick={handleButton}>Zaczynamy!</button>
                 </div>
 
             </div>
