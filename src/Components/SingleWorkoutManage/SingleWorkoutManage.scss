@@ -1,3 +1,5 @@
+@import '../../index.scss';
+
 .singleWorkoutWrapper {
     padding: 20px;
 }
@@ -36,6 +38,7 @@
     }
 
     &__current {
+        position: relative;
 
         &__title {
             font-family: 'Titillium Web';
@@ -75,6 +78,16 @@
                 border-color: #20bf6b;
                 transition: all 0.5s ease 0s;
                 outline: none;
+            }
+
+            &--undo {
+                color:red;
+                font-size:20px;
+                @include centerDiv();
+                &:hover,
+                &:focus {
+                    border-color:rgb(124, 27, 27);
+                }
             }
 
             &__icon {

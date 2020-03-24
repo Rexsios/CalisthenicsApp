@@ -37,7 +37,7 @@ export class MainPanel extends Component {
             })
     }
 
-    handleConfirmWorkout = (data) => {
+    handleConfirmWorkout = (data, undo = false) => {
         let whichWorkout = null;
         switch (data.id) {
             case 1:
@@ -64,11 +64,14 @@ export class MainPanel extends Component {
         }
         axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, data)
             .then(response => {
-                console.log(response)
+                let text = "Zapisano w bazie danych"
+                if (undo === true) {
+                    text = "Przywrócono dane pomyślnie"
+                }
                 this.setState({
                     message: {
                         id: data.id,
-                        text: "Zapisano w bazie danych.",
+                        text: text,
                         type: "good"
                     }
                 })
@@ -77,11 +80,10 @@ export class MainPanel extends Component {
                 }, 3000)
             })
             .catch(error => {
-                console.log(error)
                 this.setState({
                     message: {
                         id: data.id,
-                        text: "Coś poszło nie tak.",
+                        text: "Coś poszło nie tak",
                         type: "bad"
                     }
                 })
@@ -98,12 +100,12 @@ export class MainPanel extends Component {
             let { bridge, legRaising, pushUps, pushUpsOnHands, pullUps, squads } = { ...this.state.user.workoutType }
             show = (
                 <>
-                    <SingleWorkoutManage workout={bridge} message={this.state.message} handleConfirmButton={(data) => this.handleConfirmWorkout(data)} />
-                    <SingleWorkoutManage workout={legRaising} message={this.state.message} handleConfirmButton={(data) => this.handleConfirmWorkout(data)} />
-                    <SingleWorkoutManage workout={pushUps} message={this.state.message} handleConfirmButton={(data) => this.handleConfirmWorkout(data)} />
-                    <SingleWorkoutManage workout={pushUpsOnHands} message={this.state.message} handleConfirmButton={(data) => this.handleConfirmWorkout(data)} />
-                    <SingleWorkoutManage workout={pullUps} message={this.state.message} handleConfirmButton={(data) => this.handleConfirmWorkout(data)} />
-                    <SingleWorkoutManage workout={squads} message={this.state.message} handleConfirmButton={(data) => this.handleConfirmWorkout(data)} />
+                    <SingleWorkoutManage workout={bridge} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)} />
+                    <SingleWorkoutManage workout={legRaising} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)} />
+                    <SingleWorkoutManage workout={pushUps} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)} />
+                    <SingleWorkoutManage workout={pushUpsOnHands} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)} />
+                    <SingleWorkoutManage workout={pullUps} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)} />
+                    <SingleWorkoutManage workout={squads} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)} />
                 </>
             )
         }

@@ -1,0 +1,21 @@
+.backdrop {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(-45deg, rgb(160, 147, 147), rgb(160, 147, 147) 5px, rgb(170, 199, 170) 2px, transparent 15px);
+    color: red;
+    border-radius: 10px;
+    z-index: 100;
+    animation: mymove 3s ease-out;
+}
+
+@keyframes mymove {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

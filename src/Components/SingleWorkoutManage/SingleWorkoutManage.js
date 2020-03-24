@@ -10,6 +10,7 @@ import { Transition, animated } from 'react-spring/renderprops'
 
 import WorkoutSvg from '../../Assets/Svg/SingleWorkoutManage/WorkoutSvg'
 import WarningMessage from '../UI/MessageBox/MessageBox'
+import Backdrop from './Backdrop/Backdrop'
 
 const SingleWorkoutManage = (props) => {
     const lastNumberOfSeries = props.workout.numberOfSeries[props.workout.numberOfSeries.length - 1]
@@ -17,6 +18,7 @@ const SingleWorkoutManage = (props) => {
 
     const [currentNumber, changeCurrentNumber] = useState(lastNumberOfSeries)
     const [currentQuantity, changeQuantity] = useState(lastquantityInSeries)
+    const [windowStatus, changeWindowStatus] = useState(false)
 
     const handleButton = () => {
         if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) return null
@@ -32,7 +34,27 @@ const SingleWorkoutManage = (props) => {
             numberOfSeries: newNumberOfSeries,
             quantityInSeries: newNumberOfQuantity
         }
+
+        changeWindowStatus(true)
         props.handleConfirmButton(data)
+    }
+
+    const handleCloseButton = () => {
+        let newNumberOfSeries = props.workout.numberOfSeries
+        newNumberOfSeries.pop()
+        let newNumberOfQuantity = props.workout.quantityInSeries
+        newNumberOfQuantity.pop()
+
+        let data = {
+            id: props.workout.id,
+            name: props.workout.name,
+            level: props.workout.level,
+            numberOfSeries: newNumberOfSeries,
+            quantityInSeries: newNumberOfQuantity
+        }
+
+        changeWindowStatus(false)
+        props.handleConfirmButton(data, true)
     }
 
     let message = null
@@ -44,7 +66,16 @@ const SingleWorkoutManage = (props) => {
                 </WarningMessage>
             )
     }
-
+    let disableWindow = null
+    let textMessage = "Ostatnio robiłeś"
+    if (windowStatus === true) {
+        textMessage = "Dziś robisz"
+        disableWindow = (
+            <Backdrop>
+                <button onClick={handleCloseButton} className="singleWorkout__current__button singleWorkout__current__button--undo">Przywróć</button>
+            </Backdrop>
+        )
+    }
 
     return (
         <Col md={4} className="singleWorkoutWrapper">
@@ -65,42 +96,42 @@ const SingleWorkoutManage = (props) => {
                 {message => message && (props => <animated.div style={props}>{message}</animated.div>)}
             </Transition>
             <div className="singleWorkout">
-
                 <h2>{props.workout.name}</h2>
                 <div className="singleWorkout__last">
                     <div className="singleWorkout__last__text">
-                        <h4 className="singleWorkout__last__title">Ostatnio robiłeś</h4>
+                        <h4 className="singleWorkout__last__title">{textMessage}</h4>
                         <h6>Poziom: {props.workout.level} </h6>
                         <h6>Ilosc: {lastNumberOfSeries} x {lastquantityInSeries}</h6>
                     </div>
                     <WorkoutSvg id={props.workout.id} className="singleWorkout__last__image"></WorkoutSvg>
                 </div>
                 <div className="singleWorkout__current">
+                    {disableWindow}
                     <h4 className="singleWorkout__current__title">Dziś robisz</h4>
                     <h6>Poziom: {props.workout.level}</h6>
                     <div className="singleWorkout__current__numberOfSeries">
-                        <button className="singleWorkout__current__button" onClick={() => changeCurrentNumber(currentNumber - 1)}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeCurrentNumber(currentNumber - 1)}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faMinus} />
                         </button>
                         <h6 className="singleWorkout__current__text">Ilość serii: {currentNumber}</h6>
-                        <button className="singleWorkout__current__button" onClick={() => changeCurrentNumber(currentNumber + 1)}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeCurrentNumber(currentNumber + 1)}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faPlus} />
                         </button>
                     </div>
                     <div className="singleWorkout__current__numberOfSeries">
-                        <button className="singleWorkout__current__button" onClick={() => changeQuantity(currentQuantity - 1)}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeQuantity(currentQuantity - 1)}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faMinus} />
                         </button>
                         <h6>Ilość powtórzeń: {currentQuantity} </h6>
-                        <button className="singleWorkout__current__button" onClick={() => changeQuantity(currentQuantity + 1)}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeQuantity(currentQuantity + 1)}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faPlus} />
                         </button>
                     </div>
-                    <button className="singleWorkout__current__button" onClick={handleButton}>Zaczynamy!</button>
+                    <button className="singleWorkout__current__button" disabled={windowStatus} onClick={handleButton}>Zaczynamy!</button>
                 </div>
 
             </div>
-        </Col>
+        </Col >
     )
 }
 
