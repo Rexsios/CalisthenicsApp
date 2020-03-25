@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import './SingleWorkoutManage.scss'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faMinus, faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons'
 
 import { Col } from 'react-bootstrap'
 
 import { Transition, animated } from 'react-spring/renderprops'
+
+import classNames from 'classnames'
 
 import WorkoutSvg from '../../Assets/Svg/SingleWorkoutManage/WorkoutSvg'
 import WarningMessage from '../UI/MessageBox/MessageBox'
@@ -19,6 +21,17 @@ const SingleWorkoutManage = (props) => {
     const [currentNumber, changeCurrentNumber] = useState(lastNumberOfSeries)
     const [currentQuantity, changeQuantity] = useState(lastquantityInSeries)
     const [windowStatus, changeWindowStatus] = useState(false)
+
+
+    let levelText = `Poziom: ${props.workout.level}`
+    if (props.workout.level === 10) levelText = "MASTER"
+
+    if (props.message !== null) {
+        if (props.message.reRender && props.message.id === props.workout.id && currentNumber !== 0 && currentQuantity !== 0) {
+            changeCurrentNumber(0)
+            changeQuantity(0)
+        }
+    }
 
     const handleButton = () => {
         if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) return null
@@ -57,6 +70,39 @@ const SingleWorkoutManage = (props) => {
         props.handleConfirmButton(data, true)
     }
 
+    let checkStatus = (status) => {
+        if (status === "down") {
+            if (windowStatus || props.workout.level <= 1) {
+                return true
+            } else return false
+        } else {
+            if (windowStatus || props.workout.level >= 10) {
+                return true
+            } else return false
+        }
+    }
+
+    const buttonDownValue = classNames({
+        'singleWorkout__current__level__button': true,
+        'singleWorkout__current__level__button--disable': checkStatus('down')
+    })
+
+    const iconDownValue = classNames({
+        'singleWorkout__current__level__icon': true,
+        'singleWorkout__current__level__icon--down': true,
+        'singleWorkout__current__level__icon--disable': checkStatus('down')
+    })
+
+    const buttonUpValue = classNames({
+        'singleWorkout__current__level__button': true,
+        'singleWorkout__current__level__button--disable': checkStatus('up')
+    })
+
+    const iconUpValue = classNames({
+        'singleWorkout__current__level__icon': true,
+        'singleWorkout__current__level__icon--disable': checkStatus('up')
+    })
+
     let message = null
     if (props.message !== null) {
         if (props.message.id === props.workout.id)
@@ -66,6 +112,7 @@ const SingleWorkoutManage = (props) => {
                 </WarningMessage>
             )
     }
+
     let disableWindow = null
     let textMessage = "Ostatnio robiłeś"
     if (windowStatus === true) {
@@ -100,15 +147,25 @@ const SingleWorkoutManage = (props) => {
                 <div className="singleWorkout__last">
                     <div className="singleWorkout__last__text">
                         <h4 className="singleWorkout__last__title">{textMessage}</h4>
-                        <h6>Poziom: {props.workout.level} </h6>
+                        <h6>{levelText}</h6>
                         <h6>Ilosc: {lastNumberOfSeries} x {lastquantityInSeries}</h6>
                     </div>
                     <WorkoutSvg id={props.workout.id} className="singleWorkout__last__image"></WorkoutSvg>
                 </div>
+
                 <div className="singleWorkout__current">
                     {disableWindow}
                     <h4 className="singleWorkout__current__title">Dziś robisz</h4>
-                    <h6>Poziom: {props.workout.level}</h6>
+                    <div className="singleWorkout__current__level">
+                        <button className={buttonDownValue} disabled={checkStatus('down')} >
+                            <FontAwesomeIcon className={iconDownValue} icon={faAngleDoubleDown} />
+                        </button>
+                        <h6 className="singleWorkout__current__level__title">{levelText}</h6>
+                        <button className={buttonUpValue} disabled={checkStatus('up')} onClick={() => props.handleLvlUpButton(props.workout)}>
+                            <FontAwesomeIcon className={iconUpValue} icon={faAngleDoubleUp} />
+                        </button>
+                    </div>
+
                     <div className="singleWorkout__current__numberOfSeries">
                         <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeCurrentNumber(currentNumber - 1)}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faMinus} />

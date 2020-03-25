@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 export class ProgressPanel extends Component {
     render() {
         return (
-            <div>
-                3
-            </div>
+            <h1 style={{color:'#fff'}}>
+                Dłużej niż wkrótce! :C
+            </h1>
         )
     }
 }
