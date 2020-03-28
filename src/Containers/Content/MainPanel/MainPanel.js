@@ -5,6 +5,7 @@ import axios from 'axios'
 
 import { Container, Row } from 'react-bootstrap'
 
+
 import SingleWorkoutManage from '../../../Components/SingleWorkoutManage/SingleWorkoutManage'
 import Spinner from '../../../Components/UI/Spinner/Spinner'
 
@@ -177,7 +178,6 @@ export class MainPanel extends Component {
     }
 
     render() {
-
         let show = null;
         if (this.state.workoutType !== null && this.state.loading === false) {
             let { bridge, legRaising, pushUps, pushUpsOnHands, pullUps, squads } = { ...this.state.workoutType }

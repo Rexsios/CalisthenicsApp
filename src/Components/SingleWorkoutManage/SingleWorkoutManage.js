@@ -14,6 +14,9 @@ import WorkoutSvg from '../../Assets/Svg/SingleWorkoutManage/WorkoutSvg'
 import WarningMessage from '../UI/MessageBox/MessageBox'
 import Backdrop from './Backdrop/Backdrop'
 
+import data from '../../data/lvlUpData'
+const lvlUpData = data.lvlChange
+
 const SingleWorkoutManage = (props) => {
     const lastNumberOfSeries = props.workout.numberOfSeries[props.workout.numberOfSeries.length - 1]
     const lastquantityInSeries = props.workout.quantityInSeries[props.workout.quantityInSeries.length - 1]
@@ -71,12 +74,23 @@ const SingleWorkoutManage = (props) => {
     }
 
     let checkStatus = (status) => {
+        const id = props.workout.id
+        const level = props.workout.level
+        let flag = true
+        Object.entries(lvlUpData).forEach((item) => {
+            if (item[1].id === id) {
+                if ((lastquantityInSeries >= item[1].lvlUpQuantity[level - 1] && lastNumberOfSeries >= item[1].lvlUpSeries[level - 1])
+                    || lastquantityInSeries * lastNumberOfSeries >= item[1].lvlUpQuantity[level - 1] * item[1].lvlUpSeries[level - 1]) {
+                    flag = false
+                }
+            }
+        })
         if (status === "down") {
             if (windowStatus || props.workout.level <= 1) {
                 return true
             } else return false
         } else {
-            if (windowStatus || props.workout.level >= 10) {
+            if (windowStatus || props.workout.level >= 10 || flag) {
                 return true
             } else return false
         }
