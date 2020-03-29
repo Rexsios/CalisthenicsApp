@@ -15,7 +15,8 @@ export class MainPanel extends Component {
         user: null,
         workoutType: null,
         loading: false,
-        message: null
+        message: null,
+        reRender: false
     }
 
     componentDidMount() {
@@ -63,21 +64,20 @@ export class MainPanel extends Component {
     }
 
     componentDidUpdate() {
-        if (this.state.message !== null) {
-            if (this.state.message.reRender === true) {
-                axios.get('https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType.json')
-                    .then(response => {
-                        this.setState({
-                            workoutType: response.data,
-                            loading: false,
-                        })
+        if (this.state.reRender === true) {
+            this.setState({ reRender: false })
+            axios.get('https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType.json')
+                .then(response => {
+                    this.setState({
+                        workoutType: response.data,
+                        loading: false
                     })
-                    .catch(error => {
-                        this.setState({
-                            loading: false
-                        })
+                })
+                .catch(error => {
+                    this.setState({
+                        loading: false
                     })
-            }
+                })
         }
     }
 
@@ -131,6 +131,7 @@ export class MainPanel extends Component {
         let whichWorkout = this.checkIdName(workout.id)
         let whichLvl = `lvl${workout.level}`
 
+        this.setState({ loading: true })
 
         axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
             .then(response => {
@@ -141,8 +142,8 @@ export class MainPanel extends Component {
                                 id: workout.id,
                                 text: "Poziom wyżej!",
                                 type: "good",
-                                reRender: true
-                            }
+                            },
+                            reRender: true
                         })
                         setTimeout(() => {
                             this.setState({ message: null })
@@ -177,6 +178,77 @@ export class MainPanel extends Component {
         return null
     }
 
+    handleLvlDownButton = (workout) => {
+        let newWorkout = { ...workout }
+        const whichWorkout = this.checkIdName(workout.id)
+
+        const dataToWrite = {
+            level: workout.level,
+            numberOfSeries: workout.numberOfSeries,
+            quantityInSeries: workout.quantityInSeries,
+        }
+        let whichLvl = `lvl${workout.level}`
+
+
+        this.setState({ loading: true })
+        axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, dataToWrite)
+            .then(response => {
+                axios.get('https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory.json')
+                    .then(response => {
+                        const data = response.data
+                        Object.entries(data).forEach(item => {
+                            if (item[0] === whichWorkout) {
+                                Object.entries(item[1]).forEach(level => {
+                                    if (level[0] === `lvl${workout.level - 1}`) {
+                                        newWorkout.numberOfSeries = level[1].numberOfSeries
+                                        newWorkout.quantityInSeries = level[1].quantityInSeries
+                                        newWorkout.level = level[1].level
+                                        axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, newWorkout)
+                                            .then(response => {
+                                                this.setState({
+                                                    message: {
+                                                        id: workout.id,
+                                                        text: "Przywrócono poprawnie niższy poziom",
+                                                        type: "good",
+                                                    },
+                                                    reRender: true
+                                                })
+                                                setTimeout(() => {
+                                                    this.setState({ message: null })
+                                                }, 3000)
+                                            })
+                                            .catch(error => {
+                                                this.setState({
+                                                    message: {
+                                                        id: workout.id,
+                                                        text: "Coś poszło nie tak",
+                                                        type: "bad"
+                                                    }
+                                                })
+                                                setTimeout(() => {
+                                                    this.setState({ message: null })
+                                                }, 3000)
+                                            })
+                                    }
+                                })
+                            }
+                        })
+                    })
+            })
+            .catch(error => {
+                this.setState({
+                    message: {
+                        id: workout.id,
+                        text: "Coś poszło nie tak",
+                        type: "bad"
+                    }
+                })
+                setTimeout(() => {
+                    this.setState({ message: null })
+                }, 3000)
+            })
+    }
+
     render() {
         let show = null;
         if (this.state.workoutType !== null && this.state.loading === false) {
@@ -184,17 +256,17 @@ export class MainPanel extends Component {
             show = (
                 <>
                     <SingleWorkoutManage workout={bridge} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} />
+                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
                     <SingleWorkoutManage workout={legRaising} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} />
+                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
                     <SingleWorkoutManage workout={pushUps} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} />
+                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
                     <SingleWorkoutManage workout={pushUpsOnHands} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} />
+                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
                     <SingleWorkoutManage workout={pullUps} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} />
+                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
                     <SingleWorkoutManage workout={squads} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} />
+                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
                 </>
             )
         }

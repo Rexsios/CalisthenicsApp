@@ -11,7 +11,7 @@ import { Transition, animated } from 'react-spring/renderprops'
 import classNames from 'classnames'
 
 import WorkoutSvg from '../../Assets/Svg/SingleWorkoutManage/WorkoutSvg'
-import WarningMessage from '../UI/MessageBox/MessageBox'
+import MessageBox from '../UI/MessageBox/MessageBox'
 import Backdrop from './Backdrop/Backdrop'
 
 import data from '../../data/lvlUpData'
@@ -20,21 +20,10 @@ const lvlUpData = data.lvlChange
 const SingleWorkoutManage = (props) => {
     const lastNumberOfSeries = props.workout.numberOfSeries[props.workout.numberOfSeries.length - 1]
     const lastquantityInSeries = props.workout.quantityInSeries[props.workout.quantityInSeries.length - 1]
-
     const [currentNumber, changeCurrentNumber] = useState(lastNumberOfSeries)
     const [currentQuantity, changeQuantity] = useState(lastquantityInSeries)
     const [windowStatus, changeWindowStatus] = useState(false)
 
-
-    let levelText = `Poziom: ${props.workout.level}`
-    if (props.workout.level === 10) levelText = "MASTER"
-
-    if (props.message !== null) {
-        if (props.message.reRender && props.message.id === props.workout.id && currentNumber !== 0 && currentQuantity !== 0) {
-            changeCurrentNumber(0)
-            changeQuantity(0)
-        }
-    }
 
     const handleButton = () => {
         if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) return null
@@ -121,9 +110,9 @@ const SingleWorkoutManage = (props) => {
     if (props.message !== null) {
         if (props.message.id === props.workout.id)
             message = (
-                <WarningMessage type={props.message.type}>
+                <MessageBox type={props.message.type}>
                     {props.message.text}
-                </WarningMessage>
+                </MessageBox>
             )
     }
 
@@ -137,6 +126,9 @@ const SingleWorkoutManage = (props) => {
             </Backdrop>
         )
     }
+
+    let levelText = `Poziom: ${props.workout.level}`
+    if (props.workout.level === 10) levelText = "MASTER"
 
     return (
         <Col md={4} className="singleWorkoutWrapper">
@@ -171,7 +163,7 @@ const SingleWorkoutManage = (props) => {
                     {disableWindow}
                     <h4 className="singleWorkout__current__title">Dziś robisz</h4>
                     <div className="singleWorkout__current__level">
-                        <button className={buttonDownValue} disabled={checkStatus('down')} >
+                        <button className={buttonDownValue} disabled={checkStatus('down')} onClick={() => props.handleLvlDownButton(props.workout)} >
                             <FontAwesomeIcon className={iconDownValue} icon={faAngleDoubleDown} />
                         </button>
                         <h6 className="singleWorkout__current__level__title">{levelText}</h6>
@@ -181,7 +173,7 @@ const SingleWorkoutManage = (props) => {
                     </div>
 
                     <div className="singleWorkout__current__numberOfSeries">
-                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeCurrentNumber(currentNumber - 1)}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => { if (currentNumber>0) changeCurrentNumber(currentNumber - 1) }}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faMinus} />
                         </button>
                         <h6 className="singleWorkout__current__text">Ilość serii: {currentNumber}</h6>
@@ -190,7 +182,7 @@ const SingleWorkoutManage = (props) => {
                         </button>
                     </div>
                     <div className="singleWorkout__current__numberOfSeries">
-                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeQuantity(currentQuantity - 1)}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => { if (currentQuantity>0) changeQuantity(currentQuantity - 1) }}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faMinus} />
                         </button>
                         <h6>Ilość powtórzeń: {currentQuantity} </h6>
