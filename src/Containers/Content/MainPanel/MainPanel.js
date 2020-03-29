@@ -130,37 +130,113 @@ export class MainPanel extends Component {
         }
         let whichWorkout = this.checkIdName(workout.id)
         let whichLvl = `lvl${workout.level}`
-
+        let whichLvlUp = `lvl${workout.level + 1}`
         this.setState({ loading: true })
 
-        axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
+        axios.get(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}.json`)
             .then(response => {
-                axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, resetData)
-                    .then(response2 => {
-                        this.setState({
-                            message: {
-                                id: workout.id,
-                                text: "Poziom wyżej!",
-                                type: "good",
-                            },
-                            reRender: true
+                let exist = false
+                let backupLvl = null;
+                Object.entries(response.data).forEach(item => {
+                    if (whichLvlUp === item[0]) {
+                        exist = true
+                        backupLvl = item[1]
+                    }
+                })
+                if (exist === true) {
+                    const oldData = {
+                        id: workout.id,
+                        level: backupLvl.level,
+                        name: workout.name,
+                        numberOfSeries: backupLvl.numberOfSeries,
+                        quantityInSeries: backupLvl.quantityInSeries
+                    }
+
+
+                    axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
+                        .then(response => {
+                            axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, oldData)
+                                .then(response => {
+                                    this.setState({
+                                        message: {
+                                            id: workout.id,
+                                            text: "Poziom wyżej(znowu?)!",
+                                            type: "good",
+                                        },
+                                        reRender: true
+                                    })
+                                    setTimeout(() => {
+                                        this.setState({ message: null })
+                                    }, 3000)
+                                })
+                                .catch(error => {
+                                    this.setState({
+                                        message: {
+                                            id: data.id,
+                                            text: "Coś poszło nie tak",
+                                            type: "bad"
+                                        }
+                                    })
+                                    setTimeout(() => {
+                                        this.setState({ message: null })
+                                    }, 3000)
+                                })
                         })
-                        setTimeout(() => {
-                            this.setState({ message: null })
-                        }, 3000)
-                    })
-                    .catch(error => {
-                        this.setState({
-                            message: {
-                                id: data.id,
-                                text: "Coś poszło nie tak",
-                                type: "bad"
-                            }
+                        .catch(error => {
+                            this.setState({
+                                message: {
+                                    id: data.id,
+                                    text: "Coś poszło nie tak",
+                                    type: "bad"
+                                }
+                            })
+                            setTimeout(() => {
+                                this.setState({ message: null })
+                            }, 3000)
                         })
-                        setTimeout(() => {
-                            this.setState({ message: null })
-                        }, 3000)
-                    })
+                } else {
+                    axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
+                        .then(response => {
+                            axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, resetData)
+                                .then(response2 => {
+                                    this.setState({
+                                        message: {
+                                            id: workout.id,
+                                            text: "Poziom wyżej!",
+                                            type: "good",
+                                        },
+                                        reRender: true
+                                    })
+                                    setTimeout(() => {
+                                        this.setState({ message: null })
+                                    }, 3000)
+                                })
+                                .catch(error => {
+                                    this.setState({
+                                        message: {
+                                            id: data.id,
+                                            text: "Coś poszło nie tak",
+                                            type: "bad"
+                                        }
+                                    })
+                                    setTimeout(() => {
+                                        this.setState({ message: null })
+                                    }, 3000)
+                                })
+                        })
+                        .catch(error => {
+                            this.setState({
+                                message: {
+                                    id: data.id,
+                                    text: "Coś poszło nie tak",
+                                    type: "bad"
+                                }
+                            })
+                            setTimeout(() => {
+                                this.setState({ message: null })
+                            }, 3000)
+                        })
+                }
             })
             .catch(error => {
                 this.setState({
@@ -188,7 +264,6 @@ export class MainPanel extends Component {
             quantityInSeries: workout.quantityInSeries,
         }
         let whichLvl = `lvl${workout.level}`
-
 
         this.setState({ loading: true })
         axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, dataToWrite)

@@ -130,8 +130,13 @@ const SingleWorkoutManage = (props) => {
     let levelText = `Poziom: ${props.workout.level}`
     if (props.workout.level === 10) levelText = "MASTER"
 
+    let repeatingText = 'powtórzeń'
+    if (props.workout.id === 4 && props.workout.level >= 1 && props.workout.level <= 3) {
+        repeatingText = 'sekund'
+    }
+
     return (
-        <Col md={4} className="singleWorkoutWrapper">
+        <Col lg={4} className="singleWorkoutWrapper">
             <Transition
                 config={{ duration: 400 }}
                 items={message}
@@ -173,7 +178,7 @@ const SingleWorkoutManage = (props) => {
                     </div>
 
                     <div className="singleWorkout__current__numberOfSeries">
-                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => { if (currentNumber>0) changeCurrentNumber(currentNumber - 1) }}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => { if (currentNumber > 0) changeCurrentNumber(currentNumber - 1) }}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faMinus} />
                         </button>
                         <h6 className="singleWorkout__current__text">Ilość serii: {currentNumber}</h6>
@@ -182,10 +187,10 @@ const SingleWorkoutManage = (props) => {
                         </button>
                     </div>
                     <div className="singleWorkout__current__numberOfSeries">
-                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => { if (currentQuantity>0) changeQuantity(currentQuantity - 1) }}>
+                        <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => { if (currentQuantity > 0) changeQuantity(currentQuantity - 1) }}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faMinus} />
                         </button>
-                        <h6>Ilość powtórzeń: {currentQuantity} </h6>
+                        <h6>Ilość {repeatingText}: {currentQuantity} </h6>
                         <button className="singleWorkout__current__button" disabled={windowStatus} onClick={() => changeQuantity(currentQuantity + 1)}>
                             <FontAwesomeIcon className="singleWorkout__current__button__icon" icon={faPlus} />
                         </button>
