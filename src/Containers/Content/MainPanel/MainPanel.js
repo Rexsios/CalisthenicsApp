@@ -5,6 +5,8 @@ import axios from 'axios'
 
 import { Container, Row } from 'react-bootstrap'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import SingleWorkoutManage from '../../../Components/SingleWorkoutManage/SingleWorkoutManage'
 import Spinner from '../../../Components/UI/Spinner/Spinner'
@@ -151,7 +153,6 @@ export class MainPanel extends Component {
                         numberOfSeries: backupLvl.numberOfSeries,
                         quantityInSeries: backupLvl.quantityInSeries
                     }
-
 
                     axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
                         .then(response => {
@@ -351,11 +352,16 @@ export class MainPanel extends Component {
             )
         }
         return (
-            <Container className="workout" >
-                <Row>
-                    {show}
-                </Row>
-            </Container>
+            <>
+                <button className="workout__goBackButton" onClick={() => { this.props.history.goBack() }}>
+                    <FontAwesomeIcon icon={faArrowLeft} className="workout__goBackButton__icon" />
+                </button>
+                <Container className="workout" >
+                    <Row>
+                        {show}
+                    </Row>
+                </Container>
+            </>
         )
     }
 }

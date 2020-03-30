@@ -4,14 +4,10 @@ body {
   background-image: url('./Assets/Images/background.jpg');
 }
 
+$buttonColor: #20bf6b;
 $backgroundMainColor: rgb(47, 46, 51);
-$timeDuration: 0.4s;
 $borderColor: rgba(131, 131, 131, 0.6);
-$lessImportantColor: #a0a0a0;
-$aplicationBackgroundColor:rgb(240, 240, 240);
 $mainColor : #20bf6b;
-$lightMainColor:#fff;
-$oppositeColor: #0072bc;
 
 @mixin centerDiv () {
   position: relative;
@@ -29,4 +25,22 @@ $oppositeColor: #0072bc;
   background-color: $backgroundMainColor;
   border-radius: 5px;
   color: #fff;
+}
+
+@mixin button () {
+  color: $buttonColor;
+  background: #ffffff;
+  padding: 8px 13px;
+  border: 6px solid #494949;
+  border-radius: 6px;
+  transition: all 0.3s ease 0s;
+
+  &:hover,
+  &:focus {
+    color: #494949;
+    border-radius: 20px;
+    border-color: $mainColor;
+    transition: all 0.5s ease 0s;
+    outline: none;
+  }
 }

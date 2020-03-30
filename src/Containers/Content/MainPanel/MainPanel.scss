@@ -2,11 +2,35 @@
 
 .workout {
     @include mainContainer();
+
+    &__goBackButton {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+        @include button();
+        animation: slidein 1s ease-in-out;
+
+        &__icon {
+            color: green;
+            font-size: 20px;
+        }
+    }
 }
 
 @media (min-width: 768px) {
 
     .workout {
-        min-height:100vh;
+        min-height: 100vh;
+    }
+}
+
+@keyframes slidein {
+    from {
+        transform: translateX(-100px);
+    }
+
+    to {
+        transform: translateX(0);
     }
 }
