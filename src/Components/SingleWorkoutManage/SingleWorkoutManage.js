@@ -24,9 +24,11 @@ const SingleWorkoutManage = (props) => {
     const [currentQuantity, changeQuantity] = useState(lastquantityInSeries)
     const [windowStatus, changeWindowStatus] = useState(false)
 
-
     const handleButton = () => {
-        if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) return null
+        if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) {
+            props.handleMessage(props.workout.id, "Musisz coś zmienić!", "bad")
+            return null
+        }
         let newNumberOfSeries = props.workout.numberOfSeries
         newNumberOfSeries.push(currentNumber)
         let newNumberOfQuantity = props.workout.quantityInSeries
@@ -131,8 +133,10 @@ const SingleWorkoutManage = (props) => {
     if (props.workout.level === 10) levelText = "MASTER"
 
     let repeatingText = 'powtórzeń'
+    let displaySeconds = null
     if (props.workout.id === 4 && props.workout.level >= 1 && props.workout.level <= 3) {
         repeatingText = 'sekund'
+        displaySeconds= "s"
     }
 
     return (
@@ -159,7 +163,7 @@ const SingleWorkoutManage = (props) => {
                     <div className="singleWorkout__last__text">
                         <h4 className="singleWorkout__last__title">{textMessage}</h4>
                         <h6>{levelText}</h6>
-                        <h6>Ilosc: {lastNumberOfSeries} x {lastquantityInSeries}</h6>
+                        <h6>Ilosc: {lastNumberOfSeries} x {lastquantityInSeries}{displaySeconds}</h6>
                     </div>
                     <WorkoutSvg id={props.workout.id} className="singleWorkout__last__image"></WorkoutSvg>
                 </div>

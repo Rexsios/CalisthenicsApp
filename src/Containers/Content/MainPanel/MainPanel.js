@@ -21,6 +21,11 @@ export class MainPanel extends Component {
         reRender: false
     }
 
+    constructor(props) {
+        super(props)
+        this.timeoutExist = null
+    }
+
     componentDidMount() {
 
         this.setState({ loading: true })
@@ -67,6 +72,7 @@ export class MainPanel extends Component {
 
     componentDidUpdate() {
         if (this.state.reRender === true) {
+            console.log('work')
             this.setState({ reRender: false })
             axios.get('https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType.json')
                 .then(response => {
@@ -91,28 +97,10 @@ export class MainPanel extends Component {
                 if (undo === true) {
                     text = "Przywrócono dane pomyślnie"
                 }
-                this.setState({
-                    message: {
-                        id: data.id,
-                        text: text,
-                        type: "good"
-                    }
-                })
-                setTimeout(() => {
-                    this.setState({ message: null })
-                }, 3000)
+                this.handleMessage(data.id, text, "good")
             })
             .catch(error => {
-                this.setState({
-                    message: {
-                        id: data.id,
-                        text: "Coś poszło nie tak",
-                        type: "bad"
-                    }
-                })
-                setTimeout(() => {
-                    this.setState({ message: null })
-                }, 3000)
+                this.handleMessage(data.id, "Coś poszło nie tak", "bad")
             })
     }
 
@@ -158,100 +146,34 @@ export class MainPanel extends Component {
                         .then(response => {
                             axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, oldData)
                                 .then(response => {
-                                    this.setState({
-                                        message: {
-                                            id: workout.id,
-                                            text: "Poziom wyżej(znowu?)!",
-                                            type: "good",
-                                        },
-                                        reRender: true
-                                    })
-                                    setTimeout(() => {
-                                        this.setState({ message: null })
-                                    }, 3000)
+                                    this.handleMessage(workout.id, "Poziom wyżej(znowu?)!", "good", true)
                                 })
                                 .catch(error => {
-                                    this.setState({
-                                        message: {
-                                            id: data.id,
-                                            text: "Coś poszło nie tak",
-                                            type: "bad"
-                                        }
-                                    })
-                                    setTimeout(() => {
-                                        this.setState({ message: null })
-                                    }, 3000)
+                                    this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
                                 })
                         })
                         .catch(error => {
-                            this.setState({
-                                message: {
-                                    id: data.id,
-                                    text: "Coś poszło nie tak",
-                                    type: "bad"
-                                }
-                            })
-                            setTimeout(() => {
-                                this.setState({ message: null })
-                            }, 3000)
+                            this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
                         })
                 } else {
                     axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
                         .then(response => {
                             axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, resetData)
                                 .then(response2 => {
-                                    this.setState({
-                                        message: {
-                                            id: workout.id,
-                                            text: "Poziom wyżej!",
-                                            type: "good",
-                                        },
-                                        reRender: true
-                                    })
-                                    setTimeout(() => {
-                                        this.setState({ message: null })
-                                    }, 3000)
+                                    this.handleMessage(workout.id, "Poziom wyżej!", "good")
                                 })
                                 .catch(error => {
-                                    this.setState({
-                                        message: {
-                                            id: data.id,
-                                            text: "Coś poszło nie tak",
-                                            type: "bad"
-                                        }
-                                    })
-                                    setTimeout(() => {
-                                        this.setState({ message: null })
-                                    }, 3000)
+                                    this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
                                 })
                         })
                         .catch(error => {
-                            this.setState({
-                                message: {
-                                    id: data.id,
-                                    text: "Coś poszło nie tak",
-                                    type: "bad"
-                                }
-                            })
-                            setTimeout(() => {
-                                this.setState({ message: null })
-                            }, 3000)
+                            this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
                         })
                 }
             })
             .catch(error => {
-                this.setState({
-                    message: {
-                        id: data.id,
-                        text: "Coś poszło nie tak",
-                        type: "bad"
-                    }
-                })
-                setTimeout(() => {
-                    this.setState({ message: null })
-                }, 3000)
+                this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
             })
-
         return null
     }
 
@@ -281,70 +203,58 @@ export class MainPanel extends Component {
                                         newWorkout.level = level[1].level
                                         axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, newWorkout)
                                             .then(response => {
-                                                this.setState({
-                                                    message: {
-                                                        id: workout.id,
-                                                        text: "Przywrócono poprawnie niższy poziom",
-                                                        type: "good",
-                                                    },
-                                                    reRender: true
-                                                })
-                                                setTimeout(() => {
-                                                    this.setState({ message: null })
-                                                }, 3000)
+                                                this.handleMessage(workout.id, "Przywrócono poprawnie niższy poziom", "good", true)
                                             })
                                             .catch(error => {
-                                                this.setState({
-                                                    message: {
-                                                        id: workout.id,
-                                                        text: "Coś poszło nie tak",
-                                                        type: "bad"
-                                                    }
-                                                })
-                                                setTimeout(() => {
-                                                    this.setState({ message: null })
-                                                }, 3000)
+                                                this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
                                             })
                                     }
                                 })
                             }
                         })
                     })
+                    .catch(error => {
+                        this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
+                    })
             })
             .catch(error => {
-                this.setState({
-                    message: {
-                        id: workout.id,
-                        text: "Coś poszło nie tak",
-                        type: "bad"
-                    }
-                })
-                setTimeout(() => {
-                    this.setState({ message: null })
-                }, 3000)
+                this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
             })
     }
 
+    handleMessage = (id, text, type, reRender = false) => {
+        this.setState({
+            message: {
+                id: id,
+                text: text,
+                type: type,
+            },
+            reRender: reRender
+        })
+        if (this.timeoutExist !== null) {
+            clearTimeout(this.timeoutExist)
+        }
+        this.timeoutExist = setTimeout(() => {
+            this.setState({ message: null })
+        }, 3000)
+    }
+
     render() {
-        let show = null;
+        let show = null
         if (this.state.workoutType !== null && this.state.loading === false) {
-            let { bridge, legRaising, pushUps, pushUpsOnHands, pullUps, squads } = { ...this.state.workoutType }
-            show = (
-                <>
-                    <SingleWorkoutManage workout={bridge} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
-                    <SingleWorkoutManage workout={legRaising} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
-                    <SingleWorkoutManage workout={pushUps} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
-                    <SingleWorkoutManage workout={pushUpsOnHands} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
-                    <SingleWorkoutManage workout={pullUps} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
-                    <SingleWorkoutManage workout={squads} message={this.state.message} handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)} handleLvlDownButton={(id) => this.handleLvlDownButton(id)} />
-                </>
-            )
+            show = Object.values(this.state.workoutType).map(item => {
+                return (
+                    <SingleWorkoutManage
+                        key={item.id}
+                        workout={item}
+                        message={this.state.message}
+                        handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
+                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)}
+                        handleLvlDownButton={(id) => this.handleLvlDownButton(id)}
+                        handleMessage={(id, text, type) => this.handleMessage(id, text, type)}
+                    />
+                )
+            })
         }
         if (this.state.loading === true) {
             show = (
