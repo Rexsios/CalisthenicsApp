@@ -12,7 +12,7 @@ export class LoginPage extends Component {
             workoutType: {
                 bridge: {
                     id: 1,
-                    name:"Mostek",
+                    name: "Mostek",
                     level: 1,
                     numberOfSeries: [0, 2],
                     quantityInSeries: [0, 20]
@@ -52,10 +52,29 @@ export class LoginPage extends Component {
                     numberOfSeries: [0, 2],
                     quantityInSeries: [0, 20]
                 }
+            },
+            workoutTypeHistory: {
+                bridge: {
+                    id: 1
+                },
+                legRaising: {
+                    id: 2
+                },
+                pushUps: {
+                    id: 3
+                },
+                pushUpsOnHands: {
+                    id: 4
+                },
+                pullUps: {
+                    id: 5
+                },
+                squads: {
+                    id: 6
+                }
             }
         }
-    axios.post("https://sportplan-addc3.firebaseio.com/Users.json",user);
-
+        axios.post("https://sportplan-addc3.firebaseio.com/Users.json", user);
     }
 
     render() {

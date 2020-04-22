@@ -18,7 +18,8 @@ export class MainPanel extends Component {
         workoutType: null,
         loading: false,
         message: null,
-        reRender: false
+        reRender: false,
+        userID: '-M3vp6tuUSbMLv2sCE91'
     }
 
     constructor(props) {
@@ -27,9 +28,8 @@ export class MainPanel extends Component {
     }
 
     componentDidMount() {
-
         this.setState({ loading: true })
-        axios.get('https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType.json')
+        axios.get(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType.json`)
             .then(response => {
                 this.setState({
                     workoutType: response.data,
@@ -72,9 +72,8 @@ export class MainPanel extends Component {
 
     componentDidUpdate() {
         if (this.state.reRender === true) {
-            console.log('work')
             this.setState({ reRender: false })
-            axios.get('https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType.json')
+            axios.get(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType.json`)
                 .then(response => {
                     this.setState({
                         workoutType: response.data,
@@ -91,7 +90,7 @@ export class MainPanel extends Component {
 
     handleConfirmWorkout = (data, undo = false) => {
         let whichWorkout = this.checkIdName(data.id);
-        axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, data)
+        axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, data)
             .then(response => {
                 let text = "Zapisano w bazie danych"
                 if (undo === true) {
@@ -123,7 +122,7 @@ export class MainPanel extends Component {
         let whichLvlUp = `lvl${workout.level + 1}`
         this.setState({ loading: true })
 
-        axios.get(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}.json`)
+        axios.get(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}.json`)
             .then(response => {
                 let exist = false
                 let backupLvl = null;
@@ -142,9 +141,9 @@ export class MainPanel extends Component {
                         quantityInSeries: backupLvl.quantityInSeries
                     }
 
-                    axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
+                    axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
                         .then(response => {
-                            axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, oldData)
+                            axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, oldData)
                                 .then(response => {
                                     this.handleMessage(workout.id, "Poziom wyżej(znowu?)!", "good", true)
                                 })
@@ -156,9 +155,9 @@ export class MainPanel extends Component {
                             this.handleMessage(workout.id, "Coś poszło nie tak", "bad")
                         })
                 } else {
-                    axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
+                    axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
                         .then(response => {
-                            axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, resetData)
+                            axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, resetData)
                                 .then(response2 => {
                                     this.handleMessage(workout.id, "Poziom wyżej!", "good")
                                 })
@@ -189,9 +188,9 @@ export class MainPanel extends Component {
         let whichLvl = `lvl${workout.level}`
 
         this.setState({ loading: true })
-        axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, dataToWrite)
+        axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, dataToWrite)
             .then(response => {
-                axios.get('https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutTypeHistory.json')
+                axios.get(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory.json`)
                     .then(response => {
                         const data = response.data
                         Object.entries(data).forEach(item => {
@@ -201,7 +200,7 @@ export class MainPanel extends Component {
                                         newWorkout.numberOfSeries = level[1].numberOfSeries
                                         newWorkout.quantityInSeries = level[1].quantityInSeries
                                         newWorkout.level = level[1].level
-                                        axios.put(`https://sportplan-addc3.firebaseio.com/Users/-M32LvRep6-4W2Ol-RHE/workoutType/${whichWorkout}.json`, newWorkout)
+                                        axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, newWorkout)
                                             .then(response => {
                                                 this.handleMessage(workout.id, "Przywrócono poprawnie niższy poziom", "good", true)
                                             })
@@ -240,6 +239,7 @@ export class MainPanel extends Component {
     }
 
     render() {
+
         let show = null
         if (this.state.workoutType !== null && this.state.loading === false) {
             show = Object.values(this.state.workoutType).map(item => {
