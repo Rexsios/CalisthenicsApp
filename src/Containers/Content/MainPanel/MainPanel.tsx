@@ -1,17 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './MainPanel.scss'
 
 import axios from 'axios'
 
-import { Container, Row } from 'react-bootstrap'
+import { Container, Row} from 'react-bootstrap'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import SingleWorkoutManage from '../../../Components/SingleWorkoutManage/SingleWorkoutManage'
 import Spinner from '../../../Components/UI/Spinner/Spinner'
+import { RouteComponentProps } from 'react-router-dom'
 
-export class MainPanel extends Component {
+export default class MainPanel extends React.Component<IDetailProps, IDetailState>  {
 
     state = {
         user: null,
@@ -21,8 +22,9 @@ export class MainPanel extends Component {
         reRender: false,
         userID: '-M3vp6tuUSbMLv2sCE91'
     }
+    private timeoutExist: any | null
 
-    constructor(props) {
+    constructor(props: any) {
         super(props)
         this.timeoutExist = null
     }
@@ -43,7 +45,7 @@ export class MainPanel extends Component {
             })
     }
 
-    checkIdName = (id) => {
+    checkIdName = (id: number) => {
         let whichWorkout = null;
         switch (id) {
             case 1:
@@ -88,7 +90,7 @@ export class MainPanel extends Component {
         }
     }
 
-    handleConfirmWorkout = (data, undo = false) => {
+    handleConfirmWorkout = (data: any, undo = false) => {
         let whichWorkout = this.checkIdName(data.id);
         axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, data)
             .then(response => {
@@ -103,7 +105,7 @@ export class MainPanel extends Component {
             })
     }
 
-    handleLvlUpButton = (workout) => {
+    handleLvlUpButton = (workout: any) => {
         const data = {
             level: workout.level,
             numberOfSeries: workout.numberOfSeries,
@@ -124,15 +126,18 @@ export class MainPanel extends Component {
 
         axios.get(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}.json`)
             .then(response => {
-                let exist = false
-                let backupLvl = null;
+                let exist: boolean | null = null
+                let backupLvl: any = null
+
                 Object.entries(response.data).forEach(item => {
                     if (whichLvlUp === item[0]) {
-                        exist = true
                         backupLvl = item[1]
+                        exist = true
+                    } else {
+                        exist = false
                     }
                 })
-                if (exist === true) {
+                if (exist === true && backupLvl !== null) {
                     const oldData = {
                         id: workout.id,
                         level: backupLvl.level,
@@ -176,7 +181,7 @@ export class MainPanel extends Component {
         return null
     }
 
-    handleLvlDownButton = (workout) => {
+    handleLvlDownButton = (workout: any) => {
         let newWorkout = { ...workout }
         const whichWorkout = this.checkIdName(workout.id)
 
@@ -192,7 +197,7 @@ export class MainPanel extends Component {
             .then(response => {
                 axios.get(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory.json`)
                     .then(response => {
-                        const data = response.data
+                        const data: [object, object] = response.data
                         Object.entries(data).forEach(item => {
                             if (item[0] === whichWorkout) {
                                 Object.entries(item[1]).forEach(level => {
@@ -221,7 +226,7 @@ export class MainPanel extends Component {
             })
     }
 
-    handleMessage = (id, text, type, reRender = false) => {
+    handleMessage = (id: string, text: string, type: string, reRender: boolean = false) => {
         this.setState({
             message: {
                 id: id,
@@ -239,19 +244,20 @@ export class MainPanel extends Component {
     }
 
     render() {
-
         let show = null
+        let cos: object | null = null
         if (this.state.workoutType !== null && this.state.loading === false) {
-            show = Object.values(this.state.workoutType).map(item => {
+            cos = this.state.workoutType!
+            show = Object.values(cos!).map(item => {
                 return (
                     <SingleWorkoutManage
                         key={item.id}
                         workout={item}
                         message={this.state.message}
-                        handleConfirmButton={(data, undo) => this.handleConfirmWorkout(data, undo)}
-                        handleLvlUpButton={(workout) => this.handleLvlUpButton(workout)}
-                        handleLvlDownButton={(id) => this.handleLvlDownButton(id)}
-                        handleMessage={(id, text, type) => this.handleMessage(id, text, type)}
+                        handleConfirmButton={this.handleConfirmWorkout}
+                        handleLvlUpButton={this.handleLvlUpButton}
+                        handleLvlDownButton={this.handleLvlDownButton}
+                        handleMessage={this.handleMessage}
                     />
                 )
             })
@@ -276,4 +282,15 @@ export class MainPanel extends Component {
     }
 }
 
-export default MainPanel
+interface IDetailProps extends RouteComponentProps {
+
+}
+
+interface IDetailState {
+    user: string | null,
+    workoutType: object | null,
+    loading: boolean,
+    message: object | null,
+    reRender: boolean,
+    userID: string | null
+}
