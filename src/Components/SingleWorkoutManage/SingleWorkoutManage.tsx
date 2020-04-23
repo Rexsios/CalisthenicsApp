@@ -14,10 +14,20 @@ import WorkoutSvg from '../../Assets/Svg/SingleWorkoutManage/WorkoutSvg'
 import MessageBox from '../UI/MessageBox/MessageBox'
 import Backdrop from './Backdrop/Backdrop'
 
-import data from '../../data/lvlUpData'
+import data from '../../data/lvlUpData.json'
 const lvlUpData = data.lvlChange
 
-const SingleWorkoutManage = (props) => {
+interface IDetailProps {
+    key: string,
+    workout: any,
+    message: any,
+    handleConfirmButton: (data: any, undo?: boolean) => void,
+    handleLvlUpButton: (workout: any) => void,
+    handleLvlDownButton: (workout: any) => void,
+    handleMessage: (id: string, text: string, type: string, reRender?: boolean) => void
+}
+
+const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
     const lastNumberOfSeries = props.workout.numberOfSeries[props.workout.numberOfSeries.length - 1]
     const lastquantityInSeries = props.workout.quantityInSeries[props.workout.quantityInSeries.length - 1]
     const [currentNumber, changeCurrentNumber] = useState(lastNumberOfSeries)
@@ -64,7 +74,7 @@ const SingleWorkoutManage = (props) => {
         props.handleConfirmButton(data, true)
     }
 
-    let checkStatus = (status) => {
+    let checkStatus = (status: string) => {
         const id = props.workout.id
         const level = props.workout.level
         let flag = true
@@ -136,7 +146,7 @@ const SingleWorkoutManage = (props) => {
     let displaySeconds = null
     if (props.workout.id === 4 && props.workout.level >= 1 && props.workout.level <= 3) {
         repeatingText = 'sekund'
-        displaySeconds= "s"
+        displaySeconds = "s"
     }
 
     return (
@@ -201,7 +211,6 @@ const SingleWorkoutManage = (props) => {
                     </div>
                     <button className="singleWorkout__current__button" disabled={windowStatus} onClick={handleButton}>Zaczynamy!</button>
                 </div>
-
             </div>
         </Col >
     )

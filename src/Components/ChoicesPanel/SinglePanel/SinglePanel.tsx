@@ -1,17 +1,24 @@
 import React from 'react'
 import './SinglePanel.scss'
 
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
 import FirstPanel from '../../../Assets/Svg/ChoicesPanelIcons/FirstPanel'
 import SecondPanel from '../../../Assets/Svg/ChoicesPanelIcons/SecondPanel'
 import ThirdPanel from '../../../Assets/Svg/ChoicesPanelIcons/ThirdPanel'
 
-const singlePanel = (props) => {
+interface IDetailProps extends RouteComponentProps {
+    number: string,
+    link: string,
+    title: string,
+    description: string,
+}
+
+const singlePanel: React.FC<IDetailProps> = (props) => {
 
     let svgShow = null;
     if (props.number === "0") {
-        svgShow = <FirstPanel className="test"/>
+        svgShow = <FirstPanel className="test" />
     } else if (props.number === "1") {
         svgShow = <SecondPanel />
     } else if (props.number === "2") {
@@ -19,7 +26,7 @@ const singlePanel = (props) => {
     }
 
     return (
-        <Link to={props.match.url + props.link} className="singlePanel" tabIndex="0">
+        <Link to={props.match.url + props.link} className="singlePanel" tabIndex={0}>
             <div className="singlePanel__image">
                 {svgShow}
             </div>

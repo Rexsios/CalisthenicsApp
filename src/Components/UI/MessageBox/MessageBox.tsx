@@ -4,9 +4,13 @@ import './MessageBox.scss'
 import classNames from 'classnames'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSmileBeam,faFrown } from '@fortawesome/free-solid-svg-icons'
+import { faSmileBeam, faFrown } from '@fortawesome/free-solid-svg-icons'
 
-const warningMessage = (props) => {
+interface IDetailProps {
+    type: string
+}
+
+const warningMessage: React.FC<IDetailProps> = (props) => {
     const classValue = classNames({
         'messageBox': true,
         'messageBox--good': props.type === "good",
@@ -15,7 +19,6 @@ const warningMessage = (props) => {
 
     let icon = null;
     if (props.type === "good") {
-
         icon = <FontAwesomeIcon className="messageBox__icon messageBox__icon--good" icon={faSmileBeam} />
     } else {
         icon = <FontAwesomeIcon className="messageBox__icon messageBox__icon--bad" icon={faFrown} />

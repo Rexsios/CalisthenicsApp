@@ -3,7 +3,7 @@ import './MainPanel.scss'
 
 import axios from 'axios'
 
-import { Container, Row} from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
@@ -11,6 +11,19 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import SingleWorkoutManage from '../../../Components/SingleWorkoutManage/SingleWorkoutManage'
 import Spinner from '../../../Components/UI/Spinner/Spinner'
 import { RouteComponentProps } from 'react-router-dom'
+
+interface IDetailProps extends RouteComponentProps {
+
+}
+
+interface IDetailState {
+    user: string | null,
+    workoutType: object | null,
+    loading: boolean,
+    message: object | null,
+    reRender: boolean,
+    userID: string | null
+}
 
 export default class MainPanel extends React.Component<IDetailProps, IDetailState>  {
 
@@ -90,7 +103,7 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
         }
     }
 
-    handleConfirmWorkout = (data: any, undo = false) => {
+    handleConfirmWorkout = (data: any, undo: boolean = false) => {
         let whichWorkout = this.checkIdName(data.id);
         axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, data)
             .then(response => {
@@ -245,10 +258,10 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
 
     render() {
         let show = null
-        let cos: object | null = null
+        let tableToDisplay: object | null = null
         if (this.state.workoutType !== null && this.state.loading === false) {
-            cos = this.state.workoutType!
-            show = Object.values(cos!).map(item => {
+            tableToDisplay = this.state.workoutType!
+            show = Object.values(tableToDisplay!).map(item => {
                 return (
                     <SingleWorkoutManage
                         key={item.id}
@@ -280,17 +293,4 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
             </>
         )
     }
-}
-
-interface IDetailProps extends RouteComponentProps {
-
-}
-
-interface IDetailState {
-    user: string | null,
-    workoutType: object | null,
-    loading: boolean,
-    message: object | null,
-    reRender: boolean,
-    userID: string | null
 }

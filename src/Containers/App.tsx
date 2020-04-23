@@ -25,8 +25,4 @@ interface IDetailProps extends RouteComponentProps {
 
 }
 
-interface IDetailState {
-
-}
-
 export default App;

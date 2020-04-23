@@ -1,7 +1,7 @@
 import React from 'react'
 import './Backdrop.scss'
 
-const Backdrop = (props) => {
+const Backdrop:React.FC = (props) => {
     return (
         <div className="backdrop">{props.children}</div>
     )
