@@ -15,28 +15,34 @@ import MessageBox from '../UI/MessageBox/MessageBox'
 import Backdrop from './Backdrop/Backdrop'
 
 import data from '../../data/lvlUpData.json'
+
+//Types
+//Interfaces
+import { singleWorkout } from '../../Types/Interfaces/InterfecesList'
+//Enums
+import { messageType } from '../../Types/Enums/enumsList'
 const lvlUpData = data.lvlChange
 
 interface IDetailProps {
     key: string,
-    workout: any,
+    workout: singleWorkout,
     message: any,
-    handleConfirmButton: (data: any, undo?: boolean) => void,
-    handleLvlUpButton: (workout: any) => void,
-    handleLvlDownButton: (workout: any) => void,
-    handleMessage: (id: string, text: string, type: string, reRender?: boolean) => void
+    handleConfirmButton: (data: singleWorkout, undo?: boolean) => void,
+    handleLvlUpButton: (workout: singleWorkout) => void,
+    handleLvlDownButton: (workout: singleWorkout) => void,
+    handleMessage: (id: number, text: string, type: messageType, reRender?: boolean) => void
 }
 
 const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
-    const lastNumberOfSeries = props.workout.numberOfSeries[props.workout.numberOfSeries.length - 1]
-    const lastquantityInSeries = props.workout.quantityInSeries[props.workout.quantityInSeries.length - 1]
+    const lastNumberOfSeries: number = props.workout.numberOfSeries[props.workout.numberOfSeries.length - 1]
+    const lastquantityInSeries: number = props.workout.quantityInSeries[props.workout.quantityInSeries.length - 1]
     const [currentNumber, changeCurrentNumber] = useState(lastNumberOfSeries)
     const [currentQuantity, changeQuantity] = useState(lastquantityInSeries)
     const [windowStatus, changeWindowStatus] = useState(false)
 
     const handleButton = () => {
         if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) {
-            props.handleMessage(props.workout.id, "Musisz coś zmienić!", "bad")
+            props.handleMessage(props.workout.id, "Musisz coś zmienić!", messageType.BAD)
             return null
         }
         let newNumberOfSeries = props.workout.numberOfSeries
@@ -44,7 +50,7 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
         let newNumberOfQuantity = props.workout.quantityInSeries
         newNumberOfQuantity.push(currentQuantity)
 
-        let data = {
+        let data: singleWorkout = {
             id: props.workout.id,
             name: props.workout.name,
             level: props.workout.level,
@@ -62,7 +68,7 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
         let newNumberOfQuantity = props.workout.quantityInSeries
         newNumberOfQuantity.pop()
 
-        let data = {
+        let data: singleWorkout = {
             id: props.workout.id,
             name: props.workout.name,
             level: props.workout.level,
