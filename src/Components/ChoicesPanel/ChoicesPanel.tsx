@@ -9,12 +9,12 @@ import { faHandPointer } from '@fortawesome/free-solid-svg-icons'
 import { RouteComponentProps } from 'react-router-dom'
 
 import SinglePanel from './SinglePanel/SinglePanel'
+import { Links } from '../../Types/Enums/enumsList'
 
 interface IDetailProps extends RouteComponentProps { }
 
 const choicesPanel: React.FC<IDetailProps> = (props) => {
     const title = ["Ćwiczenia", "Poodgląd ćwiczeń", "Progress"]
-    const link = ["/trening", "/informacje", "/postepy"]
     const description = [
         "Zapisz swoje postępy i zobacz co dziś należy ćwiczyć.",
         "Przeglądaj wszystykie dostępne ćwiczenia z kalisteniki. Sprawdź co robisz źle oraz jak należy poprawić wykonywane ćwiczenie.",
@@ -33,13 +33,13 @@ const choicesPanel: React.FC<IDetailProps> = (props) => {
             </Row>
             <Row className="choicesPanel__choices">
                 <Col md={4}>
-                    <SinglePanel {...props} number="0" title={title[0]} description={description[0]} link={link[0]} />
+                    <SinglePanel {...props} number="0" title={title[0]} description={description[0]} link={Links.TRAINING} />
                 </Col>
                 <Col md={4}>
-                    <SinglePanel {...props} number="1" title={title[1]} description={description[1]} link={link[1]} />
+                    <SinglePanel {...props} number="1" title={title[1]} description={description[1]} link={Links.INFORMATION} />
                 </Col>
                 <Col md={4}>
-                    <SinglePanel {...props} number="2" title={title[2]} description={description[2]} link={link[2]} />
+                    <SinglePanel {...props} number="2" title={title[2]} description={description[2]} link={Links.PROGRESS} />
                 </Col>
             </Row>
         </Container>

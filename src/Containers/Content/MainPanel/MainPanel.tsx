@@ -17,7 +17,9 @@ import Spinner from '../../../Components/UI/Spinner/Spinner'
 //interfaces
 import { singleWorkout, singleHistoryWorkout, allWorkouts, allHistoryWorkouts } from '../../../Types/Interfaces/InterfecesList'
 //enums
-import { messageType } from '../../../Types/Enums/enumsList'
+import { MessageType } from '../../../Types/Enums/enumsList'
+//classes
+import WorkoutMethods from '../../../Types/Classes/WorkoutMethods'
 
 interface IDetailProps extends RouteComponentProps {
 
@@ -30,7 +32,7 @@ interface IDetailState {
     message: {
         id: number,
         text: string,
-        type: messageType,
+        type: MessageType,
     } | null,
     reRender: boolean,
     userID: string | null
@@ -69,33 +71,6 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
             })
     }
 
-    checkIdName = (id: number): string | null => {
-        let whichWorkout = null;
-        switch (id) {
-            case 1:
-                whichWorkout = "bridge"
-                break
-            case 2:
-                whichWorkout = "legRaising"
-                break
-            case 3:
-                whichWorkout = "pushUps"
-                break
-            case 4:
-                whichWorkout = "pushUpsOnHands"
-                break
-            case 5:
-                whichWorkout = "pullUps"
-                break
-            case 6:
-                whichWorkout = "squads"
-                break
-            default:
-                whichWorkout = null;
-        }
-        return whichWorkout;
-    }
-
     componentDidUpdate() {
         if (this.state.reRender === true) {
             this.setState({ reRender: false })
@@ -115,7 +90,7 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
     }
 
     handleConfirmWorkout = (data: singleWorkout, undo: boolean = false) => {
-        let whichWorkout = this.checkIdName(data.id);
+        let whichWorkout = WorkoutMethods.checkIdName(data.id);
         if (whichWorkout !== null) {
             axios.put<singleWorkout>(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, data)
                 .then(response => {
@@ -123,31 +98,23 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
                     if (undo === true) {
                         text = "Przywrócono dane pomyślnie"
                     }
-                    this.handleMessage(data.id, text, messageType.GOOD)
+                    this.handleMessage(data.id, text, MessageType.GOOD)
                 })
                 .catch(error => {
-                    this.handleMessage(data.id, "Coś poszło nie tak", messageType.BAD)
+                    this.handleMessage(data.id, "Coś poszło nie tak", MessageType.BAD)
                 })
         } else {
-            this.handleMessage(data.id, "Coś poszło nie tak", messageType.BAD)
+            this.handleMessage(data.id, "Coś poszło nie tak", MessageType.BAD)
         }
     }
 
     handleLvlUpButton = (workout: singleWorkout) => {
-        const data: singleHistoryWorkout = {
-            level: workout.level,
-            numberOfSeries: workout.numberOfSeries,
-            quantityInSeries: workout.quantityInSeries,
-        }
 
-        const resetData: singleWorkout = {
-            id: workout.id,
-            level: workout.level + 1,
-            name: workout.name,
-            numberOfSeries: [0],
-            quantityInSeries: [0]
-        }
-        const whichWorkout = this.checkIdName(workout.id)
+        const data = WorkoutMethods.createSingleHistoryWorkoutObject(workout.level, workout.numberOfSeries, workout.quantityInSeries)
+
+        const resetData: singleWorkout = WorkoutMethods.createSingleWorkoutObject(workout.id, workout.level + 1, workout.name, [0], [0])
+
+        const whichWorkout = WorkoutMethods.checkIdName(workout.id)
         const whichLvl = `lvl${workout.level}`
         const whichLvlUp = `lvl${workout.level + 1}`
         this.setState({ loading: true })
@@ -155,12 +122,8 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
         axios.get(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}.json`)
             .then(response => {
                 let exist: boolean | null = null
-                let backupLvl: singleHistoryWorkout | null = {
-                    //I didnt find better solution :C
-                    level: 1,
-                    numberOfSeries: [0],
-                    quantityInSeries: [0]
-                }
+                let backupLvl: singleHistoryWorkout | null = WorkoutMethods.createSingleHistoryWorkoutObject(1, [0], [0])
+                //I didnt find better solution :C
 
                 Object.entries(response.data).forEach(item => {
                     if (whichLvlUp !== item[0]) {
@@ -173,58 +136,49 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
                 })
 
                 if (exist === true && backupLvl !== null) {
-                    const oldData: singleWorkout = {
-                        id: workout.id,
-                        level: backupLvl.level,
-                        name: workout.name,
-                        numberOfSeries: backupLvl.numberOfSeries,
-                        quantityInSeries: backupLvl.quantityInSeries
-                    }
+
+                    const oldData = WorkoutMethods.createSingleWorkoutObject(workout.id, backupLvl.level, workout.name, backupLvl.numberOfSeries, backupLvl.quantityInSeries)
 
                     axios.put<singleHistoryWorkout>(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
                         .then(response => {
                             axios.put<singleWorkout>(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, oldData)
                                 .then(response => {
-                                    this.handleMessage(workout.id, "Poziom wyżej(znowu?)!", messageType.GOOD, true)
+                                    this.handleMessage(workout.id, "Poziom wyżej(znowu?)!", MessageType.GOOD, true)
                                 })
                                 .catch(error => {
-                                    this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                                    this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
                                 })
                         })
                         .catch(error => {
-                            this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                            this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
                         })
                 } else {
                     axios.put<singleHistoryWorkout>(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutTypeHistory/${whichWorkout}/${whichLvl}.json`, data)
                         .then(response => {
                             axios.put<singleWorkout>(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, resetData)
                                 .then(response2 => {
-                                    this.handleMessage(workout.id, "Poziom wyżej!", messageType.GOOD)
+                                    this.handleMessage(workout.id, "Poziom wyżej!", MessageType.GOOD)
                                 })
                                 .catch(error => {
-                                    this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                                    this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
                                 })
                         })
                         .catch(error => {
-                            this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                            this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
                         })
                 }
             })
             .catch(error => {
-                this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
             })
         return null
     }
 
     handleLvlDownButton = (workout: singleWorkout) => {
         let newWorkout: singleWorkout = { ...workout }
-        const whichWorkout = this.checkIdName(workout.id)
+        const whichWorkout = WorkoutMethods.checkIdName(workout.id)
 
-        const dataToWrite: singleHistoryWorkout = {
-            level: workout.level,
-            numberOfSeries: workout.numberOfSeries,
-            quantityInSeries: workout.quantityInSeries,
-        }
+        const dataToWrite: singleHistoryWorkout = WorkoutMethods.createSingleHistoryWorkoutObject(workout.level, workout.numberOfSeries, workout.quantityInSeries)
         let whichLvl = `lvl${workout.level}`
 
         this.setState({ loading: true })
@@ -243,10 +197,10 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
                                         newWorkout.level = level[1].level
                                         axios.put(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, newWorkout)
                                             .then(response => {
-                                                this.handleMessage(workout.id, "Przywrócono poprawnie niższy poziom", messageType.GOOD, true)
+                                                this.handleMessage(workout.id, "Przywrócono poprawnie niższy poziom", MessageType.GOOD, true)
                                             })
                                             .catch(error => {
-                                                this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                                                this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
                                             })
                                     }
                                 })
@@ -254,15 +208,15 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
                         })
                     })
                     .catch(error => {
-                        this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                        this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
                     })
             })
             .catch(error => {
-                this.handleMessage(workout.id, "Coś poszło nie tak", messageType.BAD)
+                this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)
             })
     }
 
-    handleMessage = (id: number, text: string, type: messageType, reRender: boolean = false) => {
+    handleMessage = (id: number, text: string, type: MessageType, reRender: boolean = false) => {
         this.setState({
             message: {
                 id: id,

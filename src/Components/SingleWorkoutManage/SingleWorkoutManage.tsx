@@ -20,7 +20,11 @@ import data from '../../data/lvlUpData.json'
 //Interfaces
 import { singleWorkout } from '../../Types/Interfaces/InterfecesList'
 //Enums
-import { messageType } from '../../Types/Enums/enumsList'
+import { MessageType, UpOrDown } from '../../Types/Enums/enumsList'
+//Classes
+import WorkoutMethods from '../../Types/Classes/WorkoutMethods'
+
+//data
 const lvlUpData = data.lvlChange
 
 interface IDetailProps {
@@ -30,7 +34,7 @@ interface IDetailProps {
     handleConfirmButton: (data: singleWorkout, undo?: boolean) => void,
     handleLvlUpButton: (workout: singleWorkout) => void,
     handleLvlDownButton: (workout: singleWorkout) => void,
-    handleMessage: (id: number, text: string, type: messageType, reRender?: boolean) => void
+    handleMessage: (id: number, text: string, type: MessageType, reRender?: boolean) => void
 }
 
 const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
@@ -42,7 +46,7 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
 
     const handleButton = () => {
         if (lastNumberOfSeries === currentNumber && lastquantityInSeries === currentQuantity) {
-            props.handleMessage(props.workout.id, "Musisz coś zmienić!", messageType.BAD)
+            props.handleMessage(props.workout.id, "Musisz coś zmienić!", MessageType.BAD)
             return null
         }
         let newNumberOfSeries = props.workout.numberOfSeries
@@ -50,13 +54,7 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
         let newNumberOfQuantity = props.workout.quantityInSeries
         newNumberOfQuantity.push(currentQuantity)
 
-        let data: singleWorkout = {
-            id: props.workout.id,
-            name: props.workout.name,
-            level: props.workout.level,
-            numberOfSeries: newNumberOfSeries,
-            quantityInSeries: newNumberOfQuantity
-        }
+        let data: singleWorkout = WorkoutMethods.createSingleWorkoutObject(props.workout.id, props.workout.level, props.workout.name, newNumberOfSeries, newNumberOfQuantity)
 
         changeWindowStatus(true)
         props.handleConfirmButton(data)
@@ -68,19 +66,13 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
         let newNumberOfQuantity = props.workout.quantityInSeries
         newNumberOfQuantity.pop()
 
-        let data: singleWorkout = {
-            id: props.workout.id,
-            name: props.workout.name,
-            level: props.workout.level,
-            numberOfSeries: newNumberOfSeries,
-            quantityInSeries: newNumberOfQuantity
-        }
+        let data: singleWorkout = WorkoutMethods.createSingleWorkoutObject(props.workout.id, props.workout.level, props.workout.name, newNumberOfSeries, newNumberOfQuantity)
 
         changeWindowStatus(false)
         props.handleConfirmButton(data, true)
     }
 
-    let checkStatus = (status: string) => {
+    let checkStatus = (status: UpOrDown) => {
         const id = props.workout.id
         const level = props.workout.level
         let flag = true
@@ -92,7 +84,7 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
                 }
             }
         })
-        if (status === "down") {
+        if (status === UpOrDown.DOWN) {
             if (windowStatus || props.workout.level <= 1) {
                 return true
             } else return false
@@ -105,23 +97,23 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
 
     const buttonDownValue = classNames({
         'singleWorkout__current__level__button': true,
-        'singleWorkout__current__level__button--disable': checkStatus('down')
+        'singleWorkout__current__level__button--disable': checkStatus(UpOrDown.DOWN)
     })
 
     const iconDownValue = classNames({
         'singleWorkout__current__level__icon': true,
         'singleWorkout__current__level__icon--down': true,
-        'singleWorkout__current__level__icon--disable': checkStatus('down')
+        'singleWorkout__current__level__icon--disable': checkStatus(UpOrDown.DOWN)
     })
 
     const buttonUpValue = classNames({
         'singleWorkout__current__level__button': true,
-        'singleWorkout__current__level__button--disable': checkStatus('up')
+        'singleWorkout__current__level__button--disable': checkStatus(UpOrDown.UP)
     })
 
     const iconUpValue = classNames({
         'singleWorkout__current__level__icon': true,
-        'singleWorkout__current__level__icon--disable': checkStatus('up')
+        'singleWorkout__current__level__icon--disable': checkStatus(UpOrDown.UP)
     })
 
     let message = null
@@ -188,11 +180,11 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
                     {disableWindow}
                     <h4 className="singleWorkout__current__title">Dziś robisz</h4>
                     <div className="singleWorkout__current__level">
-                        <button className={buttonDownValue} disabled={checkStatus('down')} onClick={() => props.handleLvlDownButton(props.workout)} >
+                        <button className={buttonDownValue} disabled={checkStatus(UpOrDown.DOWN)} onClick={() => props.handleLvlDownButton(props.workout)} >
                             <FontAwesomeIcon className={iconDownValue} icon={faAngleDoubleDown} />
                         </button>
                         <h6 className="singleWorkout__current__level__title">{levelText}</h6>
-                        <button className={buttonUpValue} disabled={checkStatus('up')} onClick={() => props.handleLvlUpButton(props.workout)}>
+                        <button className={buttonUpValue} disabled={checkStatus(UpOrDown.UP)} onClick={() => props.handleLvlUpButton(props.workout)}>
                             <FontAwesomeIcon className={iconUpValue} icon={faAngleDoubleUp} />
                         </button>
                     </div>

@@ -5,7 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { RouteComponentProps } from 'react-router-dom'
 
-export class ExerciseInfoPanel extends Component<IDetailProps, IDetailState> {
+interface IDetailProps extends RouteComponentProps {
+
+}
+
+export default class ExerciseInfoPanel extends Component<IDetailProps> {
     render() {
         return (
             <>
@@ -20,13 +24,3 @@ export class ExerciseInfoPanel extends Component<IDetailProps, IDetailState> {
         )
     }
 }
-
-interface IDetailProps extends RouteComponentProps {
-
-}
-
-interface IDetailState {
-
-}
-
-export default ExerciseInfoPanel

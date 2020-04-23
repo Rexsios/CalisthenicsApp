@@ -6,21 +6,21 @@ import classNames from 'classnames'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSmileBeam, faFrown } from '@fortawesome/free-solid-svg-icons'
 
-import { messageType } from '../../../Types/Enums/enumsList'
+import { MessageType } from '../../../Types/Enums/enumsList'
 
 interface IDetailProps {
-    type: messageType
+    type: MessageType
 }
 
 const warningMessage: React.FC<IDetailProps> = (props) => {
     const classValue = classNames({
         'messageBox': true,
-        'messageBox--good': props.type === messageType.GOOD,
-        'messageBox--bad': props.type === messageType.BAD
+        'messageBox--good': props.type === MessageType.GOOD,
+        'messageBox--bad': props.type === MessageType.BAD
     })
 
     let icon = null;
-    if (props.type === messageType.GOOD) {
+    if (props.type === MessageType.GOOD) {
         icon = <FontAwesomeIcon className="messageBox__icon messageBox__icon--good" icon={faSmileBeam} />
     } else {
         icon = <FontAwesomeIcon className="messageBox__icon messageBox__icon--bad" icon={faFrown} />

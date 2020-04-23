@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 
 import axios from 'axios'
+import WorkoutMethods from '../../Types/Classes/WorkoutMethods'
+import { WhichWorkout } from '../../Types/Enums/enumsList'
 
-export class LoginPage extends Component {
+export default class LoginPage extends Component {
 
     createUser = () => {
         const user = {
@@ -10,67 +12,31 @@ export class LoginPage extends Component {
             surname: "Palka",
             password: "123",
             workoutType: {
-                bridge: {
-                    id: 1,
-                    name: "Mostek",
-                    level: 1,
-                    numberOfSeries: [0, 2],
-                    quantityInSeries: [0, 20]
-                },
-                legRaising: {
-                    id: 2,
-                    name: "Unoszenie nóg",
-                    level: 1,
-                    numberOfSeries: [0, 2],
-                    quantityInSeries: [0, 20]
-                },
-                pushUps: {
-                    id: 3,
-                    name: "Pompki",
-                    level: 1,
-                    numberOfSeries: [0, 2],
-                    quantityInSeries: [0, 20]
-                },
-                pushUpsOnHands: {
-                    id: 4,
-                    name: "Pompki na rękach",
-                    level: 1,
-                    numberOfSeries: [0, 2],
-                    quantityInSeries: [0, 20]
-                },
-                pullUps: {
-                    id: 5,
-                    name: "Podciąganie",
-                    level: 1,
-                    numberOfSeries: [0, 2],
-                    quantityInSeries: [0, 20]
-                },
-                squads: {
-                    id: 6,
-                    name: "Przysiady",
-                    level: 1,
-                    numberOfSeries: [0, 2],
-                    quantityInSeries: [0, 20]
-                }
+                bridge: WorkoutMethods.createSingleWorkoutObject(WhichWorkout.BRIDGE, 1, "Mostek", [0, 0], [0, 0]),
+                legRaising: WorkoutMethods.createSingleWorkoutObject(WhichWorkout.LEGRAISING, 1, "Unoszenie nóg", [0, 0], [0, 0]),
+                pushUps: WorkoutMethods.createSingleWorkoutObject(WhichWorkout.PUSHUPS, 1, "Pompki", [0, 0], [0, 0]),
+                pushUpsOnHands: WorkoutMethods.createSingleWorkoutObject(WhichWorkout.PUSHUPSONHANDS, 1, "Pompki na rękach", [0, 0], [0, 0]),
+                pullUps: WorkoutMethods.createSingleWorkoutObject(WhichWorkout.PULLUPS, 1, "Podciąganie", [0, 0], [0, 0]),
+                squads: WorkoutMethods.createSingleWorkoutObject(WhichWorkout.SQUADS, 1, "Przysiady", [0, 0], [0, 0])
             },
             workoutTypeHistory: {
                 bridge: {
-                    id: 1
+                    id: WhichWorkout.BRIDGE
                 },
                 legRaising: {
-                    id: 2
+                    id: WhichWorkout.LEGRAISING
                 },
                 pushUps: {
-                    id: 3
+                    id: WhichWorkout.PUSHUPS
                 },
                 pushUpsOnHands: {
-                    id: 4
+                    id: WhichWorkout.PUSHUPSONHANDS
                 },
                 pullUps: {
-                    id: 5
+                    id: WhichWorkout.PULLUPS
                 },
                 squads: {
-                    id: 6
+                    id: WhichWorkout.SQUADS
                 }
             }
         }
@@ -85,5 +51,3 @@ export class LoginPage extends Component {
         )
     }
 }
-
-export default LoginPage

@@ -7,9 +7,11 @@ import FirstPanel from '../../../Assets/Svg/ChoicesPanelIcons/FirstPanel'
 import SecondPanel from '../../../Assets/Svg/ChoicesPanelIcons/SecondPanel'
 import ThirdPanel from '../../../Assets/Svg/ChoicesPanelIcons/ThirdPanel'
 
+import { Links } from '../../../Types/Enums/enumsList'
+
 interface IDetailProps extends RouteComponentProps {
     number: string,
-    link: string,
+    link: Links,
     title: string,
     description: string,
 }
