@@ -15,14 +15,12 @@ interface IDetailProps extends RouteComponentProps {
 export default class Content extends Component<IDetailProps> {
     render() {
         return (
-            <React.Fragment>
                 <Switch>
                     <Route path={this.props.match.url + Links.TRAINING} component={MainPanel} />
                     <Route path={this.props.match.url + Links.INFORMATION} component={ExerciseInfoPanel} />
                     <Route path={this.props.match.url + Links.PROGRESS} component={ProgressPanel} />
                     <Route path={this.props.match.url} component={ChoicesPanel} />
                 </Switch>
-            </React.Fragment>
         )
     }
 }

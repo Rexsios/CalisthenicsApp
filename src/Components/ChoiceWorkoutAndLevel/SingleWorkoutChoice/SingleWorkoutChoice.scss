@@ -1,0 +1,9 @@
+.singleWorkoutChoice {
+    border: 1px solid white;
+    padding: 10px;
+
+    &__svg {
+        width: 10%;
+        fill: rgb(160, 147, 147);
+    }
+}

@@ -157,7 +157,7 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
                         .then(response => {
                             axios.put<singleWorkout>(`https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType/${whichWorkout}.json`, resetData)
                                 .then(response2 => {
-                                    this.handleMessage(workout.id, "Poziom wyżej!", MessageType.GOOD)
+                                    this.handleMessage(workout.id, "Poziom wyżej!", MessageType.GOOD, true)
                                 })
                                 .catch(error => {
                                     this.handleMessage(workout.id, "Coś poszło nie tak", MessageType.BAD)

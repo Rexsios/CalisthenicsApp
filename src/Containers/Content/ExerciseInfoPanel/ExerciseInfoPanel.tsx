@@ -3,7 +3,8 @@ import './ExerciseInfoPanel.scss'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, Switch, Route } from 'react-router-dom'
+import { ChoiceWorkoutAndLevel } from '../../../Components/ChoiceWorkoutAndLevel/ChoiceWorkoutAndLevel'
 
 interface IDetailProps extends RouteComponentProps {
 
@@ -17,9 +18,9 @@ export default class ExerciseInfoPanel extends Component<IDetailProps> {
                     <FontAwesomeIcon icon={faArrowLeft} className="goBackButton__icon" />
                 </button>
 
-                <h1 className="text">
-                    Wkrótce! :P
-            </h1>
+                <Switch>
+                    <Route path={this.props.match.url} component={ChoiceWorkoutAndLevel} />
+                </Switch>
             </>
         )
     }

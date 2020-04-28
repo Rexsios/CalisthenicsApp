@@ -20,7 +20,7 @@ import data from '../../data/lvlUpData.json'
 //Interfaces
 import { singleWorkout } from '../../Types/Interfaces/InterfecesList'
 //Enums
-import { MessageType, UpOrDown } from '../../Types/Enums/enumsList'
+import { MessageType, UpOrDown, WhichWorkout } from '../../Types/Enums/enumsList'
 //Classes
 import WorkoutMethods from '../../Types/Classes/WorkoutMethods'
 
@@ -173,7 +173,7 @@ const SingleWorkoutManage: React.FC<IDetailProps> = (props) => {
                         <h6>{levelText}</h6>
                         <h6>Ilosc: {lastNumberOfSeries} x {lastquantityInSeries}{displaySeconds}</h6>
                     </div>
-                    <WorkoutSvg id={props.workout.id} className="singleWorkout__last__image"></WorkoutSvg>
+                    <WorkoutSvg nameOfClass="singleWorkout__last__image" id={props.workout.id as WhichWorkout}/>
                 </div>
 
                 <div className="singleWorkout__current">

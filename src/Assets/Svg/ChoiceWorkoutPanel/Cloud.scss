@@ -1,0 +1,12 @@
+@import '../../../index.scss';
+
+.itemInSvg {
+    width: 80%;
+    position: absolute;
+    font-size: 40px;
+    color: $mainColor;
+    top: 50%;
+    transform: translateY(-45%);
+    left:80px;
+    font-family: 'Roboto';
+}
