@@ -1,40 +1,34 @@
-@import '../../index.scss';
+@import "../../index.scss";
 
 .choicesPanel {
+  @include mainContainer();
 
-    @include mainContainer();
+  &__title {
+    margin-top: 20px;
 
-    &__title {
-
-        margin-top: 20px;
-
-        &__text {
-            text-align: center;
-            @include centerDiv();
-            width: 90%;
-            border-bottom: 1px solid white;
-            margin: 0 auto;
-            padding-bottom: 20px;
-        }
-
-        &__icon {
-            margin-left: 20px;
-        }
+    &__text {
+      text-align: center;
+      @include centerDiv();
+      width: 90%;
+      border-bottom: 1px solid white;
+      margin: 0 auto;
+      padding-bottom: 20px;
     }
 
+    &__icon {
+      margin-left: 20px;
+    }
+  }
 }
 
 @media (min-width: 768px) {
-
-    .choicesPanel {
-
-        &__titleWraper {
-            height: 10vh;
-        }
-
-
-        &__choices {
-            height: 90vh;
-        }
+  .choicesPanel {
+    &__titleWraper {
+      height: 10vh;
     }
+
+    &__choices {
+      height: 90vh;
+    }
+  }
 }

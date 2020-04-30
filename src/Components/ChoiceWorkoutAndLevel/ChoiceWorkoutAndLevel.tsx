@@ -1,26 +1,47 @@
-import React, { useState } from 'react'
-import './ChoiceWorkoutAndLevel.scss'
-import { SingleWorkoutChoice } from './SingleWorkoutChoice/SingleWorkoutChoice'
-import { SingleLvlChoice } from './SingleLvlChoice/SingleLvlChoice'
-import Cloud from '../../Assets/Svg/ChoiceWorkoutPanel/Cloud';
+import React, { useState, useEffect } from "react"
+import { StyledCloud, ChoiceWorkoutAndLevelContainer } from "./ChoiceWorkoutAndLevel.styles"
 
-export const ChoiceWorkoutAndLevel: React.FC = () => {
+import { SingleWorkoutChoice } from "./SingleWorkoutChoice/SingleWorkoutChoice"
+import { allWorkouts } from "../../Types/Interfaces/InterfecesList"
+import { SpinnerForExerciseInfoPanel } from "../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel"
 
-    const [text, setText] = useState("Wybierz które ćwiczenie chcesz przejżeć")
+interface IDetailProps {
+  loading: boolean
+  workoutType: allWorkouts
+}
 
-    let showCos: JSX.Element[] = []
+export const ChoiceWorkoutAndLevel: React.FC<IDetailProps> = (props) => {
+  const { loading, workoutType } = { ...props }
+  const [text, setText] = useState("Wybierz które ćwiczenie chcesz przejżeć")
 
-    for (let i = 1; i <= 6; i++) {
-        showCos.push(<SingleWorkoutChoice id={i} key={`SignleWorkoutChoice+${i}`} />)
-    }
-    return (
-        <>
-            <div className="choiceWorkoutAndLevel">
-                {showCos}
-                <Cloud nameOfClass="choiceWorkoutAndLevel__title">
-                    {text}
-                </Cloud>
-            </div>
-        </>
-    )
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  })
+
+  let showSingleWorkoutChoices = null
+  let showCloud = null
+  if (workoutType !== null && loading === false) {
+    showSingleWorkoutChoices = Object.values(workoutType!).map((item) => {
+      return (
+        <SingleWorkoutChoice
+          key={`SingleWorkoutChoice+${item.id}`}
+          id={item.id}
+          title={item.name}
+        />
+      )
+    })
+    showCloud = <StyledCloud>{text}</StyledCloud>
+  }
+
+  if (loading === true) {
+    showSingleWorkoutChoices = <SpinnerForExerciseInfoPanel />
+  }
+  return (
+    <>
+      <ChoiceWorkoutAndLevelContainer>
+        {showSingleWorkoutChoices}
+        {showCloud}
+      </ChoiceWorkoutAndLevelContainer>
+    </>
+  )
 }

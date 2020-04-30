@@ -1,15 +1,17 @@
-import React from 'react'
-import './SingleWorkoutChoice.scss'
-import WorkoutSvg from '../../../Assets/Svg/SingleWorkoutManage/WorkoutSvg'
+import React from "react"
+import { SingleWorkoutChoiceDiv, StyledWorkoutSvg } from "./SingleWorkoutChoice.styles"
+import { WhichWorkout } from "../../../Types/Enums/enumsList"
 
 interface IDetailProps {
-    id: number
+  id: WhichWorkout
+  title: string
 }
 
 export const SingleWorkoutChoice: React.FC<IDetailProps> = (props) => {
-    return (
-        <div className="singleWorkoutChoice">
-            <WorkoutSvg id={props.id} nameOfClass="singleWorkoutChoice__svg" />
-        </div>
-    )
+  return (
+    <SingleWorkoutChoiceDiv gridType={`item${props.id}`} tabIndex={0}>
+      <StyledWorkoutSvg id={props.id} />
+      <h2>{props.title}</h2>
+    </SingleWorkoutChoiceDiv>
+  )
 }

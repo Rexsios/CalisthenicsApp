@@ -1,19 +1,19 @@
-@import '../../../index.scss';
+@import "../../../index.scss";
 
 .goBackButton {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 100;
-    @include button();
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  @include button();
 
-    &__icon {
-        color: $mainColor;
-        font-size: 20px;
-    }
+  &__icon {
+    color: $mainColor;
+    font-size: 20px;
+  }
 }
 
 .text {
-    text-align: center;
-    color:white;
+  text-align: center;
+  color: white;
 }

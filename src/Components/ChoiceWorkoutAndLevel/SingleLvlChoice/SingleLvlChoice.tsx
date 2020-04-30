@@ -1,10 +1,5 @@
-import React from 'react'
-import './SingleLvlChoice.scss'
+import React from "react"
 
 export const SingleLvlChoice = () => {
-    return (
-        <div>
-            s
-        </div>
-    )
+  return <div>s</div>
 }
