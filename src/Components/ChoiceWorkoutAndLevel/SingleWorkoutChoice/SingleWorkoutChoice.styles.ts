@@ -15,6 +15,7 @@ export const SingleWorkoutChoiceDiv = styled.div<IDetailProps>`
   border: 6px solid #494949;
   border-radius: 6px;
   transition: all 0.3s ease 0s;
+  z-index:3;
 
   &:hover,
   &:focus {
@@ -29,11 +30,11 @@ export const SingleWorkoutChoiceDiv = styled.div<IDetailProps>`
   h2 {
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    margin-bottom:0;
-    margin-top:5px;
+    margin-bottom: 0;
+    margin-top: 5px;
     text-transform: uppercase;
-    font-size:31px;
-    font-family:"Sriracha";
+    font-size: 31px;
+    font-family: "Sriracha";
     color: #20bf6b;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: white;
@@ -45,4 +46,50 @@ export const StyledWorkoutSvg = styled(WorkoutSvg)`
   align-self: center;
   justify-self: center;
   fill: rgb(160, 147, 147);
+`
+
+export const WrapperForRomanNumbers = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  padding: 20px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "item item item"
+    "item item item"
+    "item item item"
+    "lastbutton lastbutton lastbutton";
+`
+
+export const StyledRomanNumber = styled.button`
+  align-self: center;
+  justify-self: center;
+  color: #fff !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #ed3330;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  width: 100%;
+  height: 100%;
+  transition: all 0.4s ease 0s;
+  font-family:"Roboto";
+  letter-spacing:1px;
+
+  &:hover,
+  &:focus {
+    background: #434343;
+    width: 90%;
+    letter-spacing: 2px;
+    box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+    transition: all 0.4s ease 0s;
+    outline:none;
+  }
+`
+
+export const LastStyledRomanNumber = styled(StyledRomanNumber)`
+  grid-area: lastbutton;
+  font-size:30px;
+  font-family: "Sriracha";
 `

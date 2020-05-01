@@ -5,6 +5,7 @@ export const ChoiceWorkoutAndLevelContainer = styled.div`
   padding: 3px;
   display: grid;
   min-height: 100vh;
+  z-index:1;
   grid-template-columns: 1fr;
   grid-template-rows: 200px 300px 300px 300px 300px 300px 300px;
     grid-template-areas:
@@ -15,7 +16,6 @@ export const ChoiceWorkoutAndLevelContainer = styled.div`
       "item4"
       "item5"
       "item6";
-  background-color: rgb(47, 46, 51);
   grid-gap: 10px;
   @media (min-width: 768px) {
     max-height:100vh;

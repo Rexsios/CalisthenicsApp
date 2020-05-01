@@ -7,6 +7,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import { RouteComponentProps, Switch, Route } from "react-router-dom"
 import { ChoiceWorkoutAndLevel } from "../../../Components/ChoiceWorkoutAndLevel/ChoiceWorkoutAndLevel"
 import { allWorkouts } from "../../../Types/Interfaces/InterfecesList"
+import { WhichWorkout } from "../../../Types/Enums/enumsList"
 
 interface IDetailProps extends RouteComponentProps {}
 
@@ -41,6 +42,10 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
       })
   }
 
+  handleExactWorkout = (id: WhichWorkout, lvl: number) => {
+    console.log(`${id} oraz ${lvl}`);
+  }
+
   render() {
     return (
       <>
@@ -60,6 +65,17 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
               <ChoiceWorkoutAndLevel
                 loading={this.state.loading}
                 workoutType={this.state.workoutType!}
+                handleExactWorkout={this.handleExactWorkout}
+              />
+            )}
+          />
+          <Route
+            path={this.props.match.url + '/cos'}
+            component={() => (
+              <ChoiceWorkoutAndLevel
+                loading={this.state.loading}
+                workoutType={this.state.workoutType!}
+                handleExactWorkout={this.handleExactWorkout}
               />
             )}
           />
