@@ -13,24 +13,36 @@ interface IDetailProps {
   id: WhichWorkout
   title: string
   isActive: boolean
+  lvl: number
   handleIsActiveWindow: (id: WhichWorkout) => void
-  handleExactWorkout: (id: WhichWorkout, lvl: number) => void
+  handleExactWorkout: (id: WhichWorkout, lvl: number, name: string) => void
 }
 
 export const SingleWorkoutChoice: React.FC<IDetailProps> = (props) => {
   let show = null
   let showArrayOfNumbers: JSX.Element[] = []
+  let reachLvl: boolean = false
   if (props.isActive) {
     for (let i = 1; i <= 10; i++) {
+      if (props.lvl >= i) reachLvl = true
+      else reachLvl = false
       if (i !== 10) {
         showArrayOfNumbers.push(
-          <StyledRomanNumber onClick={() => props.handleExactWorkout(props.id, i)} key={`StyledRomanNumber${i}`}>
+          <StyledRomanNumber
+            reachedLvl={reachLvl}
+            onClick={() => props.handleExactWorkout(props.id, i, props.title)}
+            key={`StyledRomanNumber${i}`}
+          >
             {RomanNumerals.roman(i)}
           </StyledRomanNumber>
         )
       } else {
         showArrayOfNumbers.push(
-          <LastStyledRomanNumber onClick={() => props.handleExactWorkout(props.id, i)} key={`StyledRomanNumber${i}`}>
+          <LastStyledRomanNumber
+            reachedLvl={reachLvl}
+            onClick={() => props.handleExactWorkout(props.id, i, props.title)}
+            key={`StyledRomanNumber${i}`}
+          >
             MASTER
           </LastStyledRomanNumber>
         )

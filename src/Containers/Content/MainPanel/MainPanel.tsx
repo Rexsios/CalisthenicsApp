@@ -17,7 +17,7 @@ import Spinner from '../../../Components/UI/Spinner/Spinner'
 //interfaces
 import { singleWorkout, singleHistoryWorkout, allWorkouts, allHistoryWorkouts } from '../../../Types/Interfaces/InterfecesList'
 //enums
-import { MessageType } from '../../../Types/Enums/enumsList'
+import { MessageType, Links } from '../../../Types/Enums/enumsList'
 //classes
 import WorkoutMethods from '../../../Types/Classes/WorkoutMethods'
 
@@ -257,7 +257,7 @@ export default class MainPanel extends React.Component<IDetailProps, IDetailStat
         }
         return (
             <>
-                <button className="workout__goBackButton" onClick={() => { this.props.history.goBack() }}>
+                <button className="workout__goBackButton" onClick={() => { this.props.history.push(Links.APP) }}>
                     <FontAwesomeIcon icon={faArrowLeft} className="workout__goBackButton__icon" />
                 </button>
                 <Container className="workout" >

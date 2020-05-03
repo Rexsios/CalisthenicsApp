@@ -15,7 +15,7 @@ export const SingleWorkoutChoiceDiv = styled.div<IDetailProps>`
   border: 6px solid #494949;
   border-radius: 6px;
   transition: all 0.3s ease 0s;
-  z-index:3;
+  z-index: 3;
 
   &:hover,
   &:focus {
@@ -31,9 +31,9 @@ export const SingleWorkoutChoiceDiv = styled.div<IDetailProps>`
     writing-mode: vertical-rl;
     text-orientation: mixed;
     margin-bottom: 0;
-    margin-top: 5px;
+    padding-top: 10px;
     text-transform: uppercase;
-    font-size: 31px;
+    font-size: 30px;
     font-family: "Sriracha";
     color: #20bf6b;
     -webkit-text-stroke-width: 1px;
@@ -61,21 +61,31 @@ export const WrapperForRomanNumbers = styled.div`
     "lastbutton lastbutton lastbutton";
 `
 
-export const StyledRomanNumber = styled.button`
+interface IDetailPropsRomanNumber {
+  reachedLvl: boolean
+}
+
+export const StyledRomanNumber = styled.button<IDetailPropsRomanNumber>`
   align-self: center;
   justify-self: center;
   color: #fff !important;
   text-transform: uppercase;
   text-decoration: none;
-  background: #ed3330;
+  background-color: ${(p) => {
+    let color: string = "red"
+    if (p.reachedLvl) {
+      color = constants.mainColor
+    }
+    return color
+  }};
   border-radius: 5px;
   display: inline-block;
   border: none;
   width: 100%;
   height: 100%;
   transition: all 0.4s ease 0s;
-  font-family:"Roboto";
-  letter-spacing:1px;
+  font-family: "Roboto";
+  letter-spacing: 1px;
 
   &:hover,
   &:focus {
@@ -84,12 +94,12 @@ export const StyledRomanNumber = styled.button`
     letter-spacing: 2px;
     box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
     transition: all 0.4s ease 0s;
-    outline:none;
+    outline: none;
   }
 `
 
 export const LastStyledRomanNumber = styled(StyledRomanNumber)`
   grid-area: lastbutton;
-  font-size:30px;
+  font-size: 30px;
   font-family: "Sriracha";
 `

@@ -10,7 +10,7 @@ import { MainBackdrop } from "../UI/Backdrop/Backdrop"
 interface IDetailProps {
   loading: boolean
   workoutType: allWorkouts
-  handleExactWorkout: (id: WhichWorkout, lvl: number) => void
+  handleExactWorkout: (id: WhichWorkout, lvl: number, title:string) => void
 }
 
 export const ChoiceWorkoutAndLevel: React.FC<IDetailProps> = (props) => {
@@ -29,6 +29,7 @@ export const ChoiceWorkoutAndLevel: React.FC<IDetailProps> = (props) => {
       if (item.id === id) {
         whichWord = item.name
       }
+      return null
     })
     setText(`Wybierz poziom w ćwiczeniu ${whichWord}`)
   }
@@ -53,6 +54,7 @@ export const ChoiceWorkoutAndLevel: React.FC<IDetailProps> = (props) => {
           key={`SingleWorkoutChoice+${item.id}`}
           id={item.id}
           title={item.name}
+          lvl={item.level}
           handleIsActiveWindow={handleIsActiveWindow}
           isActive={isActive}
           handleExactWorkout={props.handleExactWorkout}
