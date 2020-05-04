@@ -7,7 +7,7 @@ import WebFont from 'webfontloader';
 
 WebFont.load({
     google: {
-        families: ['Titillium Web:300,400,700', 'sans-serif', 'Sriracha:400', 'Roboto:400']
+        families: ['Titillium Web:300,400,700', 'Sriracha:400', 'Roboto:400,900', 'Josefin Sans:900']
     }
 });
 

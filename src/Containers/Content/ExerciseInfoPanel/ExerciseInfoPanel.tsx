@@ -68,7 +68,7 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
       <>
         <Switch>
           <Route
-            path={this.props.match.url + this.state.whichWorkUrl}
+            // path={this.props.match.url + this.state.whichWorkUrl}
             component={() => (
               <>
                 <button
