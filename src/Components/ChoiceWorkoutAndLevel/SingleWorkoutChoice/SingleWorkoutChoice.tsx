@@ -15,7 +15,7 @@ interface IDetailProps {
   isActive: boolean
   lvl: number
   handleIsActiveWindow: (id: WhichWorkout) => void
-  handleExactWorkout: (id: WhichWorkout, lvl: number, name: string) => void
+  handleExactWorkout: (id: WhichWorkout, lvl: number, name: string, achivedLvl:number) => void
 }
 
 export const SingleWorkoutChoice: React.FC<IDetailProps> = (props) => {
@@ -30,7 +30,7 @@ export const SingleWorkoutChoice: React.FC<IDetailProps> = (props) => {
         showArrayOfNumbers.push(
           <StyledRomanNumber
             reachedLvl={reachLvl}
-            onClick={() => props.handleExactWorkout(props.id, i, props.title)}
+            onClick={() => props.handleExactWorkout(props.id, i, props.title,props.lvl)}
             key={`StyledRomanNumber${i}`}
           >
             {RomanNumerals.roman(i)}
@@ -40,7 +40,7 @@ export const SingleWorkoutChoice: React.FC<IDetailProps> = (props) => {
         showArrayOfNumbers.push(
           <LastStyledRomanNumber
             reachedLvl={reachLvl}
-            onClick={() => props.handleExactWorkout(props.id, i, props.title)}
+            onClick={() => props.handleExactWorkout(props.id, i, props.title,props.lvl)}
             key={`StyledRomanNumber${i}`}
           >
             MASTER

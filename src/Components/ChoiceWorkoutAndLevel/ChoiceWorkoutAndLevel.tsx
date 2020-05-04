@@ -10,7 +10,7 @@ import { MainBackdrop } from "../UI/Backdrop/Backdrop"
 interface IDetailProps {
   loading: boolean
   workoutType: allWorkouts
-  handleExactWorkout: (id: WhichWorkout, lvl: number, title:string) => void
+  handleExactWorkout: (id: WhichWorkout, lvl: number, name: string, achivedLvl:number) => void
 }
 
 export const ChoiceWorkoutAndLevel: React.FC<IDetailProps> = (props) => {

@@ -20,6 +20,7 @@ interface IDetailState {
   redirect: boolean | null
   whichWorkUrl: string | null
   singleWorkout: singleWorkout | null
+  achiveLvl:number | null
 }
 
 export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailState> {
@@ -30,6 +31,7 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
     redirect: null,
     whichWorkUrl: null,
     singleWorkout: null,
+    achiveLvl:null
   }
 
   componentDidMount() {
@@ -50,12 +52,13 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
       })
   }
 
-  handleExactWorkout = (id: WhichWorkout, lvl: number, title: string) => {
+  handleExactWorkout = (id: WhichWorkout, lvl: number, title: string, achiveLvl:number) => {
     this.setState({
       loading: true,
       redirect: true,
       whichWorkUrl: `/${WorkoutMethods.checkIdName(id)}`,
       singleWorkout: WorkoutMethods.createSingleWorkoutObject(id, lvl, title),
+      achiveLvl: achiveLvl
     })
   }
 
@@ -68,7 +71,7 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
       <>
         <Switch>
           <Route
-            // path={this.props.match.url + this.state.whichWorkUrl}
+             path={this.props.match.url + this.state.whichWorkUrl}
             component={() => (
               <>
                 <button
@@ -80,7 +83,7 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
                 >
                   <FontAwesomeIcon icon={faArrowLeft} className="goBackButton__icon" />
                 </button>
-                <ChoosenWorkoutInfo singleWorkout={this.state.singleWorkout!} />
+                <ChoosenWorkoutInfo singleWorkout={this.state.singleWorkout!} achiveLvl={this.state.achiveLvl!} />
               </>
             )}
           />
