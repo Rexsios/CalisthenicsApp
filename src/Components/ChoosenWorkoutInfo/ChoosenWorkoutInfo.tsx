@@ -4,7 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
 import photo1 from "../../Assets/Images/photo1.png"
-import { TitleStyled, Goals, LastStyledRomanNumber } from "./ChoosenWorkoutInfo.styles"
+import {
+  TitleStyled,
+  Goals,
+  LastStyledRomanNumber,
+  StyledAchive,
+} from "./ChoosenWorkoutInfo.styles"
 
 import { singleWorkout } from "../../Types/Interfaces/InterfecesList"
 import {
@@ -23,32 +28,59 @@ import RomanNumerals from "../../Types/Classes/RomanNumerals"
 import { XRay } from "../../Assets/Svg/ChoosenWorkoutInfo/XRay"
 import { Goal } from "../../Assets/Svg/ChoosenWorkoutInfo/Goal"
 import { Improving } from "../../Assets/Svg/ChoosenWorkoutInfo/Improving"
+import { WhichWorkout } from "../../Types/Enums/enumsList"
 
 interface IDetailProps {
   singleWorkout: singleWorkout
-  achiveLvl:number
+  achiveLvl: number
+  handleExactWorkout: (id: WhichWorkout, lvl: number, name: string, achivedLvl: number) => void
 }
 
 export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
-  const { singleWorkout,achiveLvl } = props
-
+  let { singleWorkout, achiveLvl } = props
   let showArrayOfNumbers: JSX.Element[] = []
-  let reachLvl: boolean = false
+  let reachedLvl: boolean = false
+  let currentLvl: boolean = false
+  let reachedLvlForSvg: boolean = false
+  let minLvl: boolean = false
+  let maxLvl: boolean = false
   for (let i = 1; i <= 10; i++) {
-    if (singleWorkout !== null)
-      if (achiveLvl >= i) reachLvl = true
-      else reachLvl = false
+    if (singleWorkout !== null) {
+      if (achiveLvl >= i) reachedLvl = true
+      else reachedLvl = false
+
+      if (singleWorkout.level === i) {
+        currentLvl = true
+        reachedLvlForSvg = reachedLvl
+        if (i === 1) minLvl = true
+        if (i === 10) maxLvl = true
+      } else currentLvl = false
+    }
 
     if (i !== 10) {
       showArrayOfNumbers.push(
-        <StyledRomanNumber reachedLvl={reachLvl} key={`StyledRomanNumber${i}`}>
+        <StyledRomanNumber
+          reachedLvl={reachedLvl}
+          choosenLvl={currentLvl}
+          key={`StyledRomanNumber${i}`}
+          onClick={() =>
+            props.handleExactWorkout(singleWorkout.id, i, singleWorkout.name, achiveLvl)
+          }
+        >
           {RomanNumerals.roman(i)}
         </StyledRomanNumber>
       )
     } else {
       showArrayOfNumbers.push(
-        <LastStyledRomanNumber reachedLvl={reachLvl} key={`StyledRomanNumber${i}`}>
-          MASTER
+        <LastStyledRomanNumber
+          reachedLvl={reachedLvl}
+          choosenLvl={currentLvl}
+          key={`StyledRomanNumber${i}`}
+          onClick={() =>
+            props.handleExactWorkout(singleWorkout.id, i, singleWorkout.name, achiveLvl)
+          }
+        >
+          <h4>MASTER</h4>
         </LastStyledRomanNumber>
       )
     }
@@ -57,10 +89,23 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
   return (
     <>
       <Header>
+        <StyledAchive reachedLvl={reachedLvlForSvg} />
         <TitleStyled />
       </Header>
       <Wrapper>
-        <Arrow>
+        <Arrow
+          areaId={1}
+          avaliable={!minLvl}
+          disabled={minLvl}
+          onClick={() =>
+            props.handleExactWorkout(
+              singleWorkout.id,
+              singleWorkout.level - 1,
+              singleWorkout.name,
+              achiveLvl
+            )
+          }
+        >
           <FontAwesomeIcon icon={faChevronLeft} />
         </Arrow>
         <MainContainer>
@@ -98,7 +143,7 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
             <Goals>
               <div>Próg początkowy:</div>
               <div>1 seria 10 powtórzeń</div>
-              <div>Próg średniozaawansowany:</div>
+              <div>Próg środkowy:</div>
               <div>2 serie po 25 powtórzeń</div>
               <div>Próg przejścia:</div>
               <div>3 serie po 50 powtórzeń</div>
@@ -120,7 +165,19 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
             <img src={photo1} alt="photo1" />
           </PhotoWrapper>
         </MainContainer>
-        <Arrow>
+        <Arrow
+          areaId={2}
+          avaliable={!maxLvl}
+          disabled={maxLvl}
+          onClick={() =>
+            props.handleExactWorkout(
+              singleWorkout.id,
+              singleWorkout.level + 1,
+              singleWorkout.name,
+              achiveLvl
+            )
+          }
+        >
           <FontAwesomeIcon icon={faChevronRight} />
         </Arrow>
       </Wrapper>
