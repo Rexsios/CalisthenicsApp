@@ -72,9 +72,9 @@ export const StyledRomanNumber = styled.button<IDetailPropsRomanNumber>`
   text-transform: uppercase;
   text-decoration: none;
   background-color: ${(p) => {
-    let color: string = "red"
+    let color: string = constants.buttonNoReachColor
     if (p.reachedLvl) {
-      color = constants.mainColor
+      color = constants.buttonColor
     }
     return color
   }};

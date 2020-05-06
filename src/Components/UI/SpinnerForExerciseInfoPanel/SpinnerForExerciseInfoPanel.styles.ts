@@ -1,13 +1,17 @@
 import styled from "styled-components"
 
-export const StyledSpinner = styled.svg`
+interface IDetailProps {
+  color: string
+}
+
+export const StyledSpinner = styled.svg<IDetailProps>`
   animation: rotate 2s linear infinite;
   height: 100%;
   grid-area: title;
   justify-self:center;
 
   & .path {
-    stroke: #20bf6b;
+    stroke: ${props=>props.color};
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
   }

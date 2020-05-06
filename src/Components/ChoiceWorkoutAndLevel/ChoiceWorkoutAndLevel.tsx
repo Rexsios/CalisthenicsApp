@@ -6,6 +6,7 @@ import { allWorkouts } from "../../Types/Interfaces/InterfecesList"
 import { SpinnerForExerciseInfoPanel } from "../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel"
 import { WhichWorkout } from "../../Types/Enums/enumsList"
 import { MainBackdrop } from "../UI/Backdrop/Backdrop"
+import {constants} from '../../const.styles'
 
 interface IDetailProps {
   loading: boolean
@@ -65,7 +66,7 @@ export const ChoiceWorkoutAndLevel: React.FC<IDetailProps> = (props) => {
   }
 
   if (loading === true) {
-    showSingleWorkoutChoices = <SpinnerForExerciseInfoPanel />
+    showSingleWorkoutChoices = <SpinnerForExerciseInfoPanel color={constants.mainColor} />
   }
   return (
     <>

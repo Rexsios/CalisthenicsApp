@@ -11,7 +11,7 @@ import {
   StyledAchive,
 } from "./ChoosenWorkoutInfo.styles"
 
-import { singleWorkout } from "../../Types/Interfaces/InterfecesList"
+import { singleWorkout, WorkoutData } from "../../Types/Interfaces/InterfecesList"
 import {
   Wrapper,
   Arrow,
@@ -23,27 +23,28 @@ import {
   StyledRomanNumber,
   Header,
 } from "./ChoosenWorkoutInfo.styles"
-import { Execution } from "../../Assets/Svg/ChoosenWorkoutInfo/Execution"
 import RomanNumerals from "../../Types/Classes/RomanNumerals"
-import { XRay } from "../../Assets/Svg/ChoosenWorkoutInfo/XRay"
-import { Goal } from "../../Assets/Svg/ChoosenWorkoutInfo/Goal"
-import { Improving } from "../../Assets/Svg/ChoosenWorkoutInfo/Improving"
 import { WhichWorkout } from "../../Types/Enums/enumsList"
+import { ContentSvg } from "../../Assets/Svg/ChoosenWorkoutInfo/ContentSvg"
+import { SpinnerForExerciseInfoPanel } from "../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel"
+import WorkoutSvg from "../../Assets/Svg/SingleWorkoutManage/WorkoutSvg"
 
 interface IDetailProps {
+  loading: boolean
   singleWorkout: singleWorkout
   achiveLvl: number
+  workoutDataInfo: WorkoutData | null
   handleExactWorkout: (id: WhichWorkout, lvl: number, name: string, achivedLvl: number) => void
 }
 
 export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
-  let { singleWorkout, achiveLvl } = props
+  let { singleWorkout, achiveLvl, loading, workoutDataInfo } = props
   let showArrayOfNumbers: JSX.Element[] = []
-  let reachedLvl: boolean = false
-  let currentLvl: boolean = false
-  let reachedLvlForSvg: boolean = false
-  let minLvl: boolean = false
-  let maxLvl: boolean = false
+  let reachedLvl = false
+  let currentLvl = false
+  let reachedLvlForSvg = false
+  let minLvl = false
+  let maxLvl = false
   for (let i = 1; i <= 10; i++) {
     if (singleWorkout !== null) {
       if (achiveLvl >= i) reachedLvl = true
@@ -63,6 +64,7 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
           reachedLvl={reachedLvl}
           choosenLvl={currentLvl}
           key={`StyledRomanNumber${i}`}
+          disabled={currentLvl}
           onClick={() =>
             props.handleExactWorkout(singleWorkout.id, i, singleWorkout.name, achiveLvl)
           }
@@ -75,6 +77,7 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
         <LastStyledRomanNumber
           reachedLvl={reachedLvl}
           choosenLvl={currentLvl}
+          disabled={currentLvl}
           key={`StyledRomanNumber${i}`}
           onClick={() =>
             props.handleExactWorkout(singleWorkout.id, i, singleWorkout.name, achiveLvl)
@@ -86,11 +89,63 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
     }
   }
 
+  let showContent: JSX.Element[] = []
+  let showData = null
+  let colorArray = ["#f7a518", "#186af7", "#f72318", "#ce18f7"]
+  for (let i = 1; i < 5; i++) {
+    if (loading) {
+      showData = (
+        <p>
+          <SpinnerForExerciseInfoPanel color={colorArray[i - 1]} />
+        </p>
+      )
+    } else {
+      if (i === 1) {
+        showData = <p>{workoutDataInfo?.execution}</p>
+      } else if (i === 2) {
+        showData = <p>{workoutDataInfo?.xray}</p>
+      } else if (i === 3) {
+        showData = (
+          <Goals>
+            <div>Próg podstawowy:</div>
+            <div>{workoutDataInfo?.goals.beginner}</div>
+            <div>Próg średni:</div>
+            <div>{workoutDataInfo?.goals.medium}</div>
+            <div>Próg przejścia:</div>
+            <div>{workoutDataInfo?.goals.transition}</div>
+          </Goals>
+        )
+      } else if (i === 4) {
+        showData = <p>{workoutDataInfo?.improvment}</p>
+      }
+    }
+    showContent.push(
+      <React.Fragment key={`Content${i}`}>
+        <TitleWrapper areaId={i}>
+          <ContentSvg ids={i} />
+        </TitleWrapper>
+        <ContentWrapper areaId={i} isLoading={loading}>
+          {showData}
+        </ContentWrapper>
+      </React.Fragment>
+    )
+  }
+
+  let titleSVG = <WorkoutSvg id={singleWorkout.id} />
+  let titleInscription: string | null = null
+  if (workoutDataInfo !== null) {
+    titleInscription = workoutDataInfo.title
+  }
   return (
     <>
       <Header>
         <StyledAchive reachedLvl={reachedLvlForSvg} />
-        <TitleStyled />
+        <TitleStyled
+          inscription={titleInscription}
+          number={singleWorkout.level}
+          svg={titleSVG}
+          loading={loading}
+        />
       </Header>
       <Wrapper>
         <Arrow
@@ -110,54 +165,9 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
         </Arrow>
         <MainContainer>
           <LevelWrapper>{showArrayOfNumbers}</LevelWrapper>
-          <TitleWrapper areaId={1}>
-            <Execution />
-          </TitleWrapper>
-          <ContentWrapper areaId={1}>
-            Stań zwrócony twarzą do ściany, mając stopy jedna przy drugiej. Dłonie oprzyj płasko na
-            ścianie. Ręce powinny być wyprostowane i rozstawione na szerokość barków. Dłonie są na
-            wysokości klatki piersiowej. To jest pozycja wyjściowa (fot. 1). Zginaj ramiona i
-            łokcie, aż delikatnie dotkniesz czołem do ściany. To jest pozycja końcowa (fot. 2).
-            Odepchnij się do tyłu do pozycji wyjściowej i powtórz.
-          </ContentWrapper>
-          <TitleWrapper areaId={2}>
-            <XRay />
-          </TitleWrapper>
-          <ContentWrapper areaId={2}>
-            Jest to pierwszy etap w zestawie prowadzącym do mistrzowskiego opanowania ćwiczeń z
-            rodziny pompek. Skoro pierwszy, wersja ta jest najłatwiejsza. Każdy człowiek, mający
-            władanie nad swoim ciałem, powinien być w stanie wykonać ją bez problemu. Jest to
-            również pierwszy element w sekwencji terapeutycznej pompek. Ćwiczenie to jest bardzo
-            korzystne dla osoby odzyskującej sprawność po kontuzji lub operacji, kiedy dąży do
-            wzmocnienia zdrowia i stopniowego odbudowania siły. Łokcie, nadgarstki i barki
-            (zwłaszcza delikatne mięśnie pierścienia rotatorów) są szczególnie narażone na ostre lub
-            przewlekłe urazy. Ćwiczenie to łagodnie aktywizuje te obszary, pobudzając je oraz
-            zwiększając ukrwienie i napięcie toniczne. Nowicjusze w sztuce kalisteniki powinni
-            wchodzić w każdy program treningowy bardzo płynnie, tak by wyrobić odpowiednią technikę
-            i umiejętności. Dlatego nie wolno pomijać tego ćwiczenia.
-          </ContentWrapper>
-          <TitleWrapper areaId={3}>
-            <Goal />
-          </TitleWrapper>
-          <ContentWrapper areaId={3}>
-            <Goals>
-              <div>Próg początkowy:</div>
-              <div>1 seria 10 powtórzeń</div>
-              <div>Próg środkowy:</div>
-              <div>2 serie po 25 powtórzeń</div>
-              <div>Próg przejścia:</div>
-              <div>3 serie po 50 powtórzeń</div>
-            </Goals>
-          </ContentWrapper>
-          <TitleWrapper areaId={4}>
-            <Improving />
-          </TitleWrapper>
-          <ContentWrapper areaId={4}>
-            Każdy, kto czyta tę książkę, powinien być w stanie wykonać opisywane ćwiczenie, chyba że
-            jest niepełnosprawny, ciężko kontuzjowany lub chory. W okresie odzyskiwania zdrowia po
-            urazie czy operacji ćwiczenie to jest czułym miernikiem, pozwalającym zawodnikowi poznać
-            słabsze obszary wymagające rehabilitacji.
-          </ContentWrapper>
+
+          {showContent}
+
           <PhotoWrapper areaId={1}>
             <img src={photo1} alt="photo1" />
           </PhotoWrapper>

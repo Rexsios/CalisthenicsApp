@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import { RouteComponentProps, Switch, Route, Redirect } from "react-router-dom"
 import { ChoiceWorkoutAndLevel } from "../../../Components/ChoiceWorkoutAndLevel/ChoiceWorkoutAndLevel"
-import { allWorkouts, singleWorkout } from "../../../Types/Interfaces/InterfecesList"
+import { allWorkouts, singleWorkout, WorkoutData } from "../../../Types/Interfaces/InterfecesList"
 import { WhichWorkout, Links } from "../../../Types/Enums/enumsList"
 import { ChoosenWorkoutInfo } from "../../../Components/ChoosenWorkoutInfo/ChoosenWorkoutInfo"
 import WorkoutMethods from "../../../Types/Classes/WorkoutMethods"
@@ -21,6 +21,7 @@ interface IDetailState {
   whichWorkUrl: string | null
   singleWorkout: singleWorkout | null
   achiveLvl: number | null
+  workoutDataInfo: WorkoutData | null
 }
 
 export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailState> {
@@ -32,6 +33,7 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
     whichWorkUrl: null,
     singleWorkout: null,
     achiveLvl: null,
+    workoutDataInfo: null,
   }
 
   componentDidMount() {
@@ -60,6 +62,22 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
       singleWorkout: WorkoutMethods.createSingleWorkoutObject(id, lvl, title),
       achiveLvl: achiveLvl,
     })
+    const adresURL = `https://sportplan-addc3.firebaseio.com/WorkoutsData/${WorkoutMethods.checkIdName(
+      id
+    )}/lvl${lvl}.json`
+    axios
+      .get<WorkoutData>(adresURL)
+      .then((response) => {
+        this.setState({
+          workoutDataInfo: response.data,
+          loading: false,
+        })
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+        })
+      })
   }
 
   render() {
@@ -84,6 +102,8 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
                   <FontAwesomeIcon icon={faArrowLeft} className="goBackButton__icon" />
                 </button>
                 <ChoosenWorkoutInfo
+                  loading={this.state.loading}
+                  workoutDataInfo={this.state.workoutDataInfo}
                   singleWorkout={this.state.singleWorkout!}
                   achiveLvl={this.state.achiveLvl!}
                   handleExactWorkout={this.handleExactWorkout}

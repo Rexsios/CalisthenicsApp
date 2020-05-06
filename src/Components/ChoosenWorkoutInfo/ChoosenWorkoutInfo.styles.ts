@@ -3,10 +3,13 @@ import { constants } from "../../const.styles"
 
 import { Title } from "../../Assets/Svg/ChoosenWorkoutInfo/Title"
 import { Achive } from "../../Assets/Svg/ChoosenWorkoutInfo/Achive"
+import { SpinnerForExerciseInfoPanel } from "../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel"
 
 interface IDetailProps {
   areaId: number
 }
+
+export const StyledSpinner = styled(SpinnerForExerciseInfoPanel)``
 
 export const Header = styled.header`
   display: grid;
@@ -71,9 +74,9 @@ export const Arrow = styled.button<IDetailPropsForArrow>`
   svg {
     font-size: 70px;
     color: ${(p) => {
-        if (p.avaliable) return '#fff'
-        else return "#808080"
-      }};
+      if (p.avaliable) return "#fff"
+      else return "#808080"
+    }};
     transition: all 0.2s ease 0s;
   }
 `
@@ -85,14 +88,15 @@ export const MainContainer = styled.div`
   grid-template-areas:
     "title1 title1"
     "content1 content1"
+    "photo1 photo1"
+    "photo2 photo2 "
     "title2 title2"
     "content2 content2"
     "title3 level"
     "content3 level"
     "title4 level"
     "content4 level"
-    "photo1 level"
-    "photo2 level";
+    "content4 level";
   padding: 5px;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
@@ -106,11 +110,11 @@ export const MainContainer = styled.div`
       "level level level level"
       "title1 title1 . ."
       "content1 content1 content1 content1"
+      "photo1 photo1 photo2 photo2"
       ". . title2 title2"
       "content2 content2 content2 content2"
       "title3 title3 title4 title4"
-      "content3 content3 content4 content4"
-      "photo1 photo1 photo2 photo2";
+      "content3 content3 content4 content4";
     padding: 15px;
     grid-column-gap: 30px;
   }
@@ -121,11 +125,11 @@ export const LevelWrapper = styled.div`
   display: grid;
   grid-template-rows: repeat(9, 50px) 250px;
   grid-template-columns: 50px;
+  margin-bottom:30px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(9, 1fr) 2fr;
     grid-template-rows: auto;
-    margin-bottom: 30px;
   }
 `
 
@@ -141,18 +145,13 @@ export const StyledRomanNumber = styled.button<IDetailPropsRomanNumber>`
   text-transform: uppercase;
   text-decoration: none;
   background-color: ${(p) => {
-    let color: string = "red"
+    let color: string = constants.buttonNoReachColor
     if (p.reachedLvl) {
       color = constants.mainColor
     }
     return color
   }};
-  border: ${(p) => {
-    if (p.choosenLvl) {
-      return "4px solid white"
-    }
-    return "4px solid transparent"
-  }};
+  border: ${(p) => (p.choosenLvl ? "4px solid white" : "4px solid transparent")};
   width: 100%;
   height: 100%;
   transition: all 0.4s ease 0s;
@@ -161,10 +160,16 @@ export const StyledRomanNumber = styled.button<IDetailPropsRomanNumber>`
 
   &:hover,
   &:focus {
-    background: #434343;
-    width: 90%;
-    letter-spacing: 2px;
-    box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+    background-color: ${(p) => {
+      if (p.choosenLvl) {
+        if (p.reachedLvl) return constants.buttonColor
+        else return constants.buttonNoReachColor
+      } else {
+        return "#434343"
+      }
+    }};
+    width: ${(p) => (p.choosenLvl ? "100%" : "90%")};
+    letter-spacing: ${(p) => (p.choosenLvl ? "none" : "2px")};
     transition: all 0.4s ease 0s;
     outline: none;
   }
@@ -195,7 +200,12 @@ export const TitleWrapper = styled.div<IDetailProps>`
     return "title" + p.areaId
   }};
 `
-export const ContentWrapper = styled.div<IDetailProps>`
+
+interface IDetailPropsForContent extends IDetailProps {
+  isLoading: boolean
+}
+
+export const ContentWrapper = styled.div<IDetailPropsForContent>`
   grid-area: ${(p) => {
     return "content" + p.areaId
   }};
@@ -211,24 +221,33 @@ export const ContentWrapper = styled.div<IDetailProps>`
       return "linear-gradient(135deg, rgba(83,0,127,1) 0%, rgba(83,0,127,1) 1%, rgba(206,24,247,1) 80%, rgba(206,24,247,1) 100%)"
     }
   }};
+
   padding: 5px;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
   margin-bottom: 20px;
   border: 5px solid white;
+  display: grid;
 
   @media (min-width: 768px) {
     padding: 40px;
     font-size: 18px;
-
     border: 10px solid white;
+  }
+
+  p {
+    padding: 0;
+    margin: 0;
+    width: ${(p) => (p.isLoading ? "30%" : "auto")};
+    justify-self: center;
+    align-self: center;
   }
 `
 
 export const Goals = styled.div`
   display: grid;
   height: 100%;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   grid-template-rows: 1fr 1fr 1fr;
   align-items: center;
   text-align: center;
@@ -239,7 +258,7 @@ export const PhotoWrapper = styled.div<IDetailProps>`
     return "photo" + p.areaId
   }};
   display: grid;
-  margin-bottom:20px;
+  margin-bottom: 20px;
   img {
     width: 100%;
     @media (min-width: 768px) {
