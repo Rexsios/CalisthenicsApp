@@ -9,8 +9,6 @@ interface IDetailProps {
   areaId: number
 }
 
-export const StyledSpinner = styled(SpinnerForExerciseInfoPanel)``
-
 export const Header = styled.header`
   display: grid;
   color: white;
@@ -125,7 +123,7 @@ export const LevelWrapper = styled.div`
   display: grid;
   grid-template-rows: repeat(9, 50px) 250px;
   grid-template-columns: 50px;
-  margin-bottom:30px;
+  margin-bottom: 30px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(9, 1fr) 2fr;
@@ -199,6 +197,7 @@ export const TitleWrapper = styled.div<IDetailProps>`
   grid-area: ${(p) => {
     return "title" + p.areaId
   }};
+  align-self: end;
 `
 
 interface IDetailPropsForContent extends IDetailProps {
@@ -260,14 +259,14 @@ export const PhotoWrapper = styled.div<IDetailProps>`
   display: grid;
   margin-bottom: 20px;
   img {
-    width: 100%;
-    @media (min-width: 768px) {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-      text-align: left;
-
-      width: 80%;
-      margin: 0 auto;
-    }
+    justify-self: center;
+    max-width: 100%;
+    align-self: center;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
   }
+`
+
+export const StyledPhotoSpinner = styled(SpinnerForExerciseInfoPanel)`
+  width: 50%;
 `

@@ -3,12 +3,12 @@ import React from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
-import photo1 from "../../Assets/Images/photo1.png"
 import {
   TitleStyled,
   Goals,
   LastStyledRomanNumber,
   StyledAchive,
+  StyledPhotoSpinner,
 } from "./ChoosenWorkoutInfo.styles"
 
 import { singleWorkout, WorkoutData } from "../../Types/Interfaces/InterfecesList"
@@ -34,17 +34,20 @@ interface IDetailProps {
   singleWorkout: singleWorkout
   achiveLvl: number
   workoutDataInfo: WorkoutData | null
+  photosUrl: string[]
   handleExactWorkout: (id: WhichWorkout, lvl: number, name: string, achivedLvl: number) => void
 }
 
 export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
-  let { singleWorkout, achiveLvl, loading, workoutDataInfo } = props
+  let { singleWorkout, achiveLvl, loading, workoutDataInfo, photosUrl } = props
   let showArrayOfNumbers: JSX.Element[] = []
   let reachedLvl = false
   let currentLvl = false
   let reachedLvlForSvg = false
   let minLvl = false
   let maxLvl = false
+
+  //List of levels show
   for (let i = 1; i <= 10; i++) {
     if (singleWorkout !== null) {
       if (achiveLvl >= i) reachedLvl = true
@@ -89,6 +92,8 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
     }
   }
 
+  //ContentShow
+
   let showContent: JSX.Element[] = []
   let showData = null
   let colorArray = ["#f7a518", "#186af7", "#f72318", "#ce18f7"]
@@ -130,7 +135,35 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
       </React.Fragment>
     )
   }
+  //Photos
 
+  let showPhoto = null
+
+  if (loading) {
+    showPhoto = (
+      <>
+        <PhotoWrapper areaId={1}>
+          <StyledPhotoSpinner color="#494949" />
+        </PhotoWrapper>
+        <PhotoWrapper areaId={2}>
+          <StyledPhotoSpinner color="#494949" />
+        </PhotoWrapper>
+      </>
+    )
+  } else {
+    showPhoto = (
+      <>
+        <PhotoWrapper areaId={1}>
+          <img src={photosUrl[0]} alt={workoutDataInfo?.title} />
+        </PhotoWrapper>
+        <PhotoWrapper areaId={2}>
+          <img src={photosUrl[1]} alt={workoutDataInfo?.title} />
+        </PhotoWrapper>
+      </>
+    )
+  }
+
+  //Title
   let titleSVG = <WorkoutSvg id={singleWorkout.id} />
   let titleInscription: string | null = null
   if (workoutDataInfo !== null) {
@@ -168,12 +201,7 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
 
           {showContent}
 
-          <PhotoWrapper areaId={1}>
-            <img src={photo1} alt="photo1" />
-          </PhotoWrapper>
-          <PhotoWrapper areaId={2}>
-            <img src={photo1} alt="photo1" />
-          </PhotoWrapper>
+          {showPhoto}
         </MainContainer>
         <Arrow
           areaId={2}

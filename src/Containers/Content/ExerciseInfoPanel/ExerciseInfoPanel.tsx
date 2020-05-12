@@ -11,6 +11,8 @@ import { WhichWorkout, Links } from "../../../Types/Enums/enumsList"
 import { ChoosenWorkoutInfo } from "../../../Components/ChoosenWorkoutInfo/ChoosenWorkoutInfo"
 import WorkoutMethods from "../../../Types/Classes/WorkoutMethods"
 
+import { storage } from "../../../firebase.config"
+
 interface IDetailProps extends RouteComponentProps {}
 
 interface IDetailState {
@@ -22,6 +24,7 @@ interface IDetailState {
   singleWorkout: singleWorkout | null
   achiveLvl: number | null
   workoutDataInfo: WorkoutData | null
+  photoUrls: string[]
 }
 
 export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailState> {
@@ -34,6 +37,7 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
     singleWorkout: null,
     achiveLvl: null,
     workoutDataInfo: null,
+    photoUrls: ["", ""],
   }
 
   componentDidMount() {
@@ -62,16 +66,41 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
       singleWorkout: WorkoutMethods.createSingleWorkoutObject(id, lvl, title),
       achiveLvl: achiveLvl,
     })
+
     const adresURL = `https://sportplan-addc3.firebaseio.com/WorkoutsData/${WorkoutMethods.checkIdName(
       id
     )}/lvl${lvl}.json`
+
     axios
       .get<WorkoutData>(adresURL)
       .then((response) => {
-        this.setState({
-          workoutDataInfo: response.data,
-          loading: false,
-        })
+        storage
+          .ref(`${WorkoutMethods.checkIdName(id)}/lvl${lvl}`)
+          .child("photo1kon.png")
+          .getDownloadURL()
+          .then((url1) => {
+            storage
+              .ref(`${WorkoutMethods.checkIdName(id)}/lvl${lvl}`)
+              .child("photo2kon.png")
+              .getDownloadURL()
+              .then((url2) => {
+                this.setState({
+                  photoUrls: [url1, url2],
+                  workoutDataInfo: response.data,
+                  loading: false,
+                })
+              })
+              .catch((error) => {
+                this.setState({
+                  loading: false,
+                })
+              })
+          })
+          .catch((error) => {
+            this.setState({
+              loading: false,
+            })
+          })
       })
       .catch((error) => {
         this.setState({
@@ -107,6 +136,7 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
                   singleWorkout={this.state.singleWorkout!}
                   achiveLvl={this.state.achiveLvl!}
                   handleExactWorkout={this.handleExactWorkout}
+                  photosUrl={this.state.photoUrls}
                 />
               </>
             )}

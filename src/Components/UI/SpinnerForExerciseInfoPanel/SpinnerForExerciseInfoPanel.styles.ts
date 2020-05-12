@@ -6,8 +6,8 @@ interface IDetailProps {
 
 export const StyledSpinner = styled.svg<IDetailProps>`
   animation: rotate 2s linear infinite;
-  height: 100%;
   grid-area: title;
+  width:100%;
   justify-self:center;
 
   & .path {
