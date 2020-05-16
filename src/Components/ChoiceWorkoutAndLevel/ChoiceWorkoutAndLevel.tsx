@@ -6,12 +6,12 @@ import { allWorkouts } from "../../Types/Interfaces/InterfecesList"
 import { SpinnerForExerciseInfoPanel } from "../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel"
 import { WhichWorkout } from "../../Types/Enums/enumsList"
 import { MainBackdrop } from "../UI/Backdrop/Backdrop"
-import {constants} from '../../const.styles'
+import { constants } from "../../const.styles"
 
 interface IDetailProps {
   loading: boolean
   workoutType: allWorkouts
-  handleExactWorkout: (id: WhichWorkout, lvl: number, name: string, achivedLvl:number) => void
+  handleExactWorkout: (id: WhichWorkout, lvl: number, name: string, achivedLvl: number) => void
 }
 
 export const ChoiceWorkoutAndLevel: React.FC<IDetailProps> = (props) => {

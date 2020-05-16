@@ -18,6 +18,7 @@ export enum Links {
     TRAINING = "/trening",
     INFORMATION = "/informacje",
     PROGRESS = "/postepy",
-    LOGIN = "/login",
-    APP= "/aplikacja"
+    LOGIN = "/logowanie",
+    APP= "/aplikacja",
+    REGISTER= "/rejestracja"
 }

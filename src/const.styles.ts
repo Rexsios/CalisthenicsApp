@@ -3,5 +3,6 @@ export const constants =  {
     buttonNoReachColor: "#C21807",
     backgroundMainColor: 'rgb(47, 46, 51)',
     borderColor: 'rgba(131, 131, 131, 0.6)',
-    mainColor : '#20bf6b'
+    mainColor : '#20bf6b',
+    mainColor2: '#73049f'
 }

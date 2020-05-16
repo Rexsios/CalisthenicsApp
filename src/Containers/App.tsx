@@ -4,8 +4,8 @@ import './App.scss'
 import { Route, Switch, Redirect, BrowserRouter, RouteComponentProps } from 'react-router-dom'
 
 import Content from './Content/Content'
-import LoginPage from './LoginPage/LoginPage'
 import { Links } from '../Types/Enums/enumsList'
+import LoginComponent from './LoginComponent/LoginComponent'
 
 
 interface IDetailProps extends RouteComponentProps {
@@ -17,9 +17,9 @@ export default class App extends Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path={Links.LOGIN} component={LoginPage} />
+          <Route path={Links.LOGIN} component={LoginComponent} />
           <Route path={Links.APP} component={Content} />
-          <Redirect path="/" to={Links.APP} />
+          <Redirect path="/" to={Links.LOGIN} />
         </Switch >
       </BrowserRouter>
     );

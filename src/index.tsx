@@ -7,7 +7,7 @@ import WebFont from "webfontloader"
 
 WebFont.load({
   google: {
-    families: ["Titillium Web:300,400,700", "Sriracha:400", "Roboto:400,900", "Josefin Sans:700"],
+    families: ["Titillium Web:300,400,700", "Sriracha:400", "Roboto:400,900", "Josefin Sans:700", "Poppins:400,600,700"],
   },
 })
 
