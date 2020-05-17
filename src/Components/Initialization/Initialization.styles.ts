@@ -1,12 +1,16 @@
-import styled from "styled-components"
-import { constants } from "../../const.styles"
+import styled, { keyframes } from 'styled-components'
+import { constants } from '../../const.styles'
+import { Form } from 'formik'
 
-export const StyledForm = styled.form`
+export const StyledForm = styled(Form)`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   font-family: Poppins;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 `
 
 export const StyledTitle = styled.span`
@@ -20,7 +24,11 @@ export const StyledTitle = styled.span`
   padding-bottom: 60px;
 `
 
-export const StyledInput = styled.div`
+interface IDetailPropsInput {
+  isValid: boolean
+}
+
+export const StyledInput = styled.div<IDetailPropsInput>`
   width: 100%;
   position: relative;
   border-bottom: 2px solid #dbdbdb;
@@ -30,8 +38,13 @@ export const StyledInput = styled.div`
     font-weight: 600;
     font-size: 18px;
     color: #999999;
-    line-height: 1.2;
     padding-left: 2px;
+    align-self: center;
+    line-height: 2;
+  }
+
+  .title {
+    display: flex;
   }
 
   input {
@@ -55,11 +68,13 @@ export const StyledInput = styled.div`
     display: flex;
 
     svg {
-      line-height: 1.2;
       font-size: 22px;
       height: 50px;
       color: #555555;
-      margin-left: 3px;
+      &:hover,
+      &:focus {
+        cursor: pointer;
+      }
     }
   }
 
@@ -87,16 +102,78 @@ export const StyledInput = styled.div`
     pointer-events: none;
 
     &:before {
-      content: "";
+      content: '';
       display: block;
       position: absolute;
       bottom: -2px;
       left: 0;
-      width: 0;
+      width: ${({ isValid }) => (isValid ? '0' : '100%')};
       height: 2px;
       transition: all 0.4s;
-      background: #d5007d;
-      background: linear-gradient(45deg, #aa39d6, rgba(115, 4, 159, 1));
+      background: ${({ isValid }) =>
+        isValid
+          ? 'linear-gradient(45deg, #aa39d6, rgba(115, 4, 159, 1))'
+          : constants.buttonNoReachColor};
+    }
+  }
+`
+
+interface IDetailPropsWarningMessage {
+  isVisible: boolean
+}
+
+const fadeIn = keyframes`
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+`
+
+export const StyledWarningMessage = styled.div<IDetailPropsWarningMessage>`
+  margin-left: auto;
+  font-size: 24px;
+  margin-right: 3px;
+  color: ${constants.buttonNoReachColor};
+  animation: ${fadeIn} 0.3s linear;
+
+  p {
+    display: flex;
+    background-color: ${constants.buttonNoReachColor};
+    padding: 10px;
+    border-radius: 30px;
+    max-width: 200px;
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    right: 40px;
+    top: 0;
+    justify-content: center;
+    text-align: center;
+    opacity: ${({ isVisible }) => (isVisible ? '1' : '0')};
+    transition: 0.5s ease-out;
+    cursor: ${({ isVisible }) => (isVisible ? 'pointer' : 'default')};
+    z-index:${({ isVisible }) => (isVisible ? '10' : '-1')};
+
+    &:after {
+      content: '';
+      bottom: 20px;
+      right: -16px;
+      width: 30px;
+      height: 30px;
+      box-shadow: -10px 40px 0 -10px ${constants.buttonNoReachColor};
+      background-color: ${constants.buttonNoReachColor};
+      border-radius: 50%;
+      display: block;
+      position: absolute;
+      cursor: ${({ isVisible }) => (isVisible ? 'pointer' : 'default')};
+    }
+  }
+
+  span {
+    &:hover {
+      cursor: pointer;
     }
   }
 `
@@ -114,11 +191,15 @@ export const ButtonWrapper = styled.div`
   }
 `
 
-export const ButtonLeft = styled.button`
+interface IDetailPropsLeftButton {
+  isValid: boolean
+}
+
+export const ButtonLeft = styled.button<IDetailPropsLeftButton>`
   border: none;
   padding: 0;
   font: inherit;
-  cursor: pointer;
+  cursor: ${({ isValid }) => (isValid ? 'pointer' : 'auto')};
   outline: inherit;
   display: flex;
   justify-content: center;
@@ -130,16 +211,26 @@ export const ButtonLeft = styled.button`
   line-height: 1.2;
   color: white;
   background: rgb(208, 176, 221);
-  background: linear-gradient(180deg, rgba(208, 176, 221, 1) 0%, rgba(115, 4, 159, 1) 100%);
+  background: ${({ isValid }) =>
+    isValid
+      ? 'linear-gradient(180deg, rgba(208, 176, 221, 1) 0%, rgba(115, 4, 159, 1) 100%)'
+      : 'rgba(208, 176, 221, 1)'};
   border-radius: 40px;
   transition: 0.5s ease-in;
 
   &:hover,
   &:focus {
-    transform: scale(1.1);
-    transition: 0.2s ease-out;
-    border: 2px solid rgb(208, 176, 221);
-    outline: none;
+    ${({ isValid }) => {
+      if (isValid) {
+        return `
+          transform: scale(1.1);
+          border: 2px solid rgb(208, 176, 221);
+          outline: none;
+        `
+      }
+    }}
+
+    transition: 0.5s ease-out;
   }
 `
 

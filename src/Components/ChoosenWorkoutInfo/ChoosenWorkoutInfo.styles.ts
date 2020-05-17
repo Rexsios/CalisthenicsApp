@@ -1,9 +1,9 @@
-import styled from "styled-components"
-import { constants } from "../../const.styles"
+import styled from 'styled-components'
+import { constants } from '../../const.styles'
 
-import { Title } from "../../Assets/Svg/ChoosenWorkoutInfo/Title"
-import { Achive } from "../../Assets/Svg/ChoosenWorkoutInfo/Achive"
-import { SpinnerForExerciseInfoPanel } from "../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel"
+import { Title } from '../../Assets/Svg/ChoosenWorkoutInfo/Title'
+import { Achive } from '../../Assets/Svg/ChoosenWorkoutInfo/Achive'
+import { SpinnerForExerciseInfoPanel } from '../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel'
 
 interface IDetailProps {
   areaId: number
@@ -13,11 +13,11 @@ export const Header = styled.header`
   display: grid;
   color: white;
   grid-template-columns: 1fr 1fr 2fr 2fr;
-  grid-template-areas: "achiveLvl achiveLvl title title";
+  grid-template-areas: 'achiveLvl achiveLvl title title';
 
   @media (min-width: 768px) {
     grid-template-columns: 100px 1fr 1fr 2fr;
-    grid-template-areas: ". achiveLvl . title";
+    grid-template-areas: '. achiveLvl . title';
   }
 `
 
@@ -35,11 +35,11 @@ export const Wrapper = styled.div`
 
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "main main"
-    "arrow1 arrow2";
+    'main main'
+    'arrow1 arrow2';
   @media (min-width: 768px) {
     grid-template-columns: 100px auto 100px;
-    grid-template-areas: "arrow1 main arrow2";
+    grid-template-areas: 'arrow1 main arrow2';
   }
 `
 interface IDetailPropsForArrow extends IDetailProps {
@@ -64,7 +64,7 @@ export const Arrow = styled.button<IDetailPropsForArrow>`
     svg {
       color: ${(p) => {
         if (p.avaliable) return constants.mainColor
-        else return "#808080"
+        else return '#808080'
       }};
       transition: all 0.4s ease 0s;
     }
@@ -72,8 +72,8 @@ export const Arrow = styled.button<IDetailPropsForArrow>`
   svg {
     font-size: 70px;
     color: ${(p) => {
-      if (p.avaliable) return "#fff"
-      else return "#808080"
+      if (p.avaliable) return '#fff'
+      else return '#808080'
     }};
     transition: all 0.2s ease 0s;
   }
@@ -84,17 +84,17 @@ export const MainContainer = styled.div`
   display: grid;
   grid-template-columns: auto 50px;
   grid-template-areas:
-    "title1 title1"
-    "content1 content1"
-    "photo1 photo1"
-    "photo2 photo2 "
-    "title2 title2"
-    "content2 content2"
-    "title3 level"
-    "content3 level"
-    "title4 level"
-    "content4 level"
-    "content4 level";
+    'title1 title1'
+    'content1 content1'
+    'photo1 photo1'
+    'photo2 photo2 '
+    'title2 title2'
+    'content2 content2'
+    'title3 level'
+    'content3 level'
+    'title4 level'
+    'content4 level'
+    'content4 level';
   padding: 5px;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
@@ -105,14 +105,14 @@ export const MainContainer = styled.div`
     border: 6px solid #73049f;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-areas:
-      "level level level level"
-      "title1 title1 . ."
-      "content1 content1 content1 content1"
-      "photo1 photo1 photo2 photo2"
-      ". . title2 title2"
-      "content2 content2 content2 content2"
-      "title3 title3 title4 title4"
-      "content3 content3 content4 content4";
+      'level level level level'
+      'title1 title1 . .'
+      'content1 content1 content1 content1'
+      'photo1 photo1 photo2 photo2'
+      '. . title2 title2'
+      'content2 content2 content2 content2'
+      'title3 title3 title4 title4'
+      'content3 content3 content4 content4';
     padding: 15px;
     grid-column-gap: 30px;
   }
@@ -149,11 +149,11 @@ export const StyledRomanNumber = styled.button<IDetailPropsRomanNumber>`
     }
     return color
   }};
-  border: ${(p) => (p.choosenLvl ? "4px solid white" : "4px solid transparent")};
+  border: ${(p) => (p.choosenLvl ? '4px solid white' : '4px solid transparent')};
   width: 100%;
   height: 100%;
   transition: all 0.4s ease 0s;
-  font-family: "Roboto";
+  font-family: 'Roboto';
   letter-spacing: 1px;
 
   &:hover,
@@ -163,11 +163,11 @@ export const StyledRomanNumber = styled.button<IDetailPropsRomanNumber>`
         if (p.reachedLvl) return constants.buttonColor
         else return constants.buttonNoReachColor
       } else {
-        return "#434343"
+        return '#434343'
       }
     }};
-    width: ${(p) => (p.choosenLvl ? "100%" : "90%")};
-    letter-spacing: ${(p) => (p.choosenLvl ? "none" : "2px")};
+    width: ${(p) => (p.choosenLvl ? '100%' : '90%')};
+    letter-spacing: ${(p) => (p.choosenLvl ? 'none' : '2px')};
     transition: all 0.4s ease 0s;
     outline: none;
   }
@@ -178,7 +178,7 @@ export const StyledRomanNumber = styled.button<IDetailPropsRomanNumber>`
 
 export const LastStyledRomanNumber = styled(StyledRomanNumber)`
   font-size: 30px;
-  font-family: "Sriracha";
+  font-family: 'Sriracha';
   h4 {
     writing-mode: vertical-rl;
     text-orientation: upright;
@@ -195,7 +195,7 @@ export const LastStyledRomanNumber = styled(StyledRomanNumber)`
 
 export const TitleWrapper = styled.div<IDetailProps>`
   grid-area: ${(p) => {
-    return "title" + p.areaId
+    return 'title' + p.areaId
   }};
   align-self: end;
 `
@@ -206,18 +206,18 @@ interface IDetailPropsForContent extends IDetailProps {
 
 export const ContentWrapper = styled.div<IDetailPropsForContent>`
   grid-area: ${(p) => {
-    return "content" + p.areaId
+    return 'content' + p.areaId
   }};
   text-align: center;
   background: ${(p) => {
     if (p.areaId === 1) {
-      return "linear-gradient(135deg, rgba(247,165,24,1) 0%, rgba(247,165,24,1) 1%, rgba(127,60,0,1) 80%, rgba(127,60,0,1) 100%)"
+      return 'linear-gradient(135deg, rgba(247,165,24,1) 0%, rgba(247,165,24,1) 1%, rgba(127,60,0,1) 80%, rgba(127,60,0,1) 100%)'
     } else if (p.areaId === 2) {
-      return "linear-gradient(to right, rgba(27,85,179,1) 0%, rgba(27,85,179,1) 1%, rgba(16,93,207,1) 80%, rgba(16,93,207,1) 100%)"
+      return 'linear-gradient(to right, rgba(27,85,179,1) 0%, rgba(27,85,179,1) 1%, rgba(16,93,207,1) 80%, rgba(16,93,207,1) 100%)'
     } else if (p.areaId === 3) {
-      return "linear-gradient(42deg, rgba(247,35,24,1) 0%, rgba(247,35,24,1) 1%, rgba(155,8,17,1) 80%, rgba(155,8,17,1) 100%)"
+      return 'linear-gradient(42deg, rgba(247,35,24,1) 0%, rgba(247,35,24,1) 1%, rgba(155,8,17,1) 80%, rgba(155,8,17,1) 100%)'
     } else {
-      return "linear-gradient(135deg, rgba(83,0,127,1) 0%, rgba(83,0,127,1) 1%, rgba(206,24,247,1) 80%, rgba(206,24,247,1) 100%)"
+      return 'linear-gradient(135deg, rgba(83,0,127,1) 0%, rgba(83,0,127,1) 1%, rgba(206,24,247,1) 80%, rgba(206,24,247,1) 100%)'
     }
   }};
 
@@ -237,7 +237,7 @@ export const ContentWrapper = styled.div<IDetailPropsForContent>`
   p {
     padding: 0;
     margin: 0;
-    width: ${(p) => (p.isLoading ? "30%" : "auto")};
+    width: ${(p) => (p.isLoading ? '30%' : 'auto')};
     justify-self: center;
     align-self: center;
   }
@@ -254,7 +254,7 @@ export const Goals = styled.div`
 
 export const PhotoWrapper = styled.div<IDetailProps>`
   grid-area: ${(p) => {
-    return "photo" + p.areaId
+    return 'photo' + p.areaId
   }};
   display: grid;
   margin-bottom: 20px;
