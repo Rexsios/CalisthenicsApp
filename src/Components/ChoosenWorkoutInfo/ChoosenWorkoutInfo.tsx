@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
@@ -39,6 +39,9 @@ interface IDetailProps {
 }
 
 export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
+  const [loadingImage, setLoadingImage] = useState(true)
+  const [loadingImage2, setLoadingImage2] = useState(true)
+
   let { singleWorkout, achiveLvl, loading, workoutDataInfo, photosUrl } = props
   let showArrayOfNumbers: JSX.Element[] = []
   let reachedLvl = false
@@ -139,25 +142,40 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
 
   let showPhoto = null
 
-  if (loading) {
+  if (!loading) {
     showPhoto = (
       <>
         <PhotoWrapper areaId={1}>
-          <StyledPhotoSpinner color="#494949" />
+          <img
+            src={photosUrl[0]}
+            alt={workoutDataInfo?.title}
+            onLoad={() => {
+              setLoadingImage(false)
+            }}
+          />
         </PhotoWrapper>
         <PhotoWrapper areaId={2}>
-          <StyledPhotoSpinner color="#494949" />
+          <img
+            src={photosUrl[1]}
+            alt={workoutDataInfo?.title}
+            onLoad={() => {
+              setLoadingImage2(false)
+            }}
+          />
         </PhotoWrapper>
       </>
     )
-  } else {
-    showPhoto = (
+  }
+
+  let showPhotoSpinner = null
+  if (loadingImage || loadingImage2) {
+    showPhotoSpinner = (
       <>
         <PhotoWrapper areaId={1}>
-          <img src={photosUrl[0]} alt={workoutDataInfo?.title} />
+          <StyledPhotoSpinner color="#494949" />
         </PhotoWrapper>
         <PhotoWrapper areaId={2}>
-          <img src={photosUrl[1]} alt={workoutDataInfo?.title} />
+          <StyledPhotoSpinner color="#494949" />
         </PhotoWrapper>
       </>
     )
@@ -202,6 +220,7 @@ export const ChoosenWorkoutInfo: React.FC<IDetailProps> = (props) => {
           {showContent}
 
           {showPhoto}
+          {showPhotoSpinner}
         </MainContainer>
         <Arrow
           areaId={2}
