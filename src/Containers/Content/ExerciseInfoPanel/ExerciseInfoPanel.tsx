@@ -10,6 +10,7 @@ import { allWorkouts, singleWorkout, WorkoutData } from "../../../Types/Interfac
 import { WhichWorkout, Links } from "../../../Types/Enums/enumsList"
 import { ChoosenWorkoutInfo } from "../../../Components/ChoosenWorkoutInfo/ChoosenWorkoutInfo"
 import WorkoutMethods from "../../../Types/Classes/WorkoutMethods"
+import ContextAuth from '../../../context/auth-context'
 
 import { storage } from "../../../firebase.config"
 
@@ -17,7 +18,6 @@ interface IDetailProps extends RouteComponentProps {}
 
 interface IDetailState {
   loading: boolean
-  userID: string | null
   workoutType: allWorkouts | null
   redirect: boolean | null
   whichWorkUrl: string | null
@@ -30,7 +30,6 @@ interface IDetailState {
 export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailState> {
   state = {
     loading: true,
-    userID: "-M3vp6tuUSbMLv2sCE91",
     workoutType: null,
     redirect: null,
     whichWorkUrl: null,
@@ -40,10 +39,12 @@ export default class ExerciseInfoPanel extends Component<IDetailProps, IDetailSt
     photoUrls: ["", ""],
   }
 
+  static contextType = ContextAuth
+
   componentDidMount() {
     axios
       .get<allWorkouts>(
-        `https://sportplan-addc3.firebaseio.com/Users/${this.state.userID}/workoutType.json`
+        `https://sportplan-addc3.firebaseio.com/Users/${this.context.userDatabaseId}/workoutType.json${this.context.userAuthQuery}`
       )
       .then((response) => {
         this.setState({

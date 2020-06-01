@@ -8,12 +8,7 @@ import * as Yup from 'yup'
 import { Links } from '../../../Types/Enums/enumsList'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faLongArrowAltRight,
-  faEye,
-  faEyeSlash,
-  faExclamationCircle,
-} from '@fortawesome/free-solid-svg-icons'
+import { faLongArrowAltRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import {
   StyledForm,
   StyledTitle,
@@ -21,8 +16,10 @@ import {
   ButtonWrapper,
   ButtonRight,
   ButtonLeft,
+  InitSpinner,
 } from '../Initialization.styles'
 import { WarningMessage } from '../WarningMessage'
+import { LoginData } from '../../../Types/Interfaces/InterfecesList'
 
 interface FormValues {
   email: string
@@ -30,7 +27,8 @@ interface FormValues {
 }
 
 interface IDetailProps {
-  handleRedirectToApp: () => void
+  loading: boolean
+  handleLogin: (login: LoginData) => void
 }
 
 export const LoginPage: React.FC<IDetailProps> = (props) => {
@@ -38,6 +36,8 @@ export const LoginPage: React.FC<IDetailProps> = (props) => {
 
   const [isVisible, setIsVisible] = useState<boolean>(false)
   const refPasswordInput = useRef<HTMLInputElement>(null)
+
+  const { loading } = props
 
   const handleClickVisiblePassword = () => {
     if (isVisible) refPasswordInput.current?.setAttribute('type', 'password')
@@ -54,11 +54,13 @@ export const LoginPage: React.FC<IDetailProps> = (props) => {
       }}
       validationSchema={Yup.object({
         email: Yup.string().email('Invalid email adress').required('Pole jest wymagane'),
-        password: Yup.string().max(20, 'Must be 20 characters or less').required('Pole jest wymagane'),
+        password: Yup.string()
+          .max(20, 'Must be 20 characters or less')
+          .min(6, 'Hasło musi składać się z conajmniej 6 znaków')
+          .required('Pole jest wymagane'),
       })}
       onSubmit={(values) => {
-        alert(JSON.stringify(values, null, 2))
-        props.handleRedirectToApp()
+        props.handleLogin(values)
       }}
     >
       {(formik) => (
@@ -71,7 +73,7 @@ export const LoginPage: React.FC<IDetailProps> = (props) => {
           >
             <div className="title">
               <span className="label">Adres email</span>
-              <ErrorMessage name="email" render={msg=><WarningMessage text={msg}/>} />
+              <ErrorMessage name="email" render={(msg) => <WarningMessage text={msg} />} />
             </div>
             <Field type="text" name="email" placeholder="Podaj adres email..." />
             <span className="focus"></span>
@@ -86,7 +88,7 @@ export const LoginPage: React.FC<IDetailProps> = (props) => {
           >
             <div className="title">
               <span className="label">Hasło</span>
-              <ErrorMessage name="password" render={msg=><WarningMessage text={msg}/>} />
+              <ErrorMessage name="password" render={(msg) => <WarningMessage text={msg} />} />
             </div>
 
             <div className="password">
@@ -105,9 +107,13 @@ export const LoginPage: React.FC<IDetailProps> = (props) => {
           </StyledInput>
 
           <ButtonWrapper>
-            <ButtonLeft disabled={!formik.isValid} isValid={formik.isValid} type="submit">
-              Zaloguj
-            </ButtonLeft>
+            {loading ? (
+              <InitSpinner color="#73049f" />
+            ) : (
+              <ButtonLeft disabled={!formik.isValid} isValid={formik.isValid} type="submit">
+                Zaloguj
+              </ButtonLeft>
+            )}
 
             <ButtonRight
               onClick={(e) => {

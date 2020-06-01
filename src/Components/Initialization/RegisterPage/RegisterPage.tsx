@@ -11,16 +11,21 @@ import {
   ButtonWrapper,
   ButtonRight,
   ButtonLeft,
+  InitSpinner,
 } from '../Initialization.styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLongArrowAltRight, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons'
 import { WarningMessage } from '../WarningMessage'
+import { RegisterData } from '../../../Types/Interfaces/InterfecesList'
 
 interface IDetailProps {
-  handleRedirectToApp: () => void
+  loading: boolean
+  handleRegister: (values: RegisterData) => void
 }
 
 export const RegisterPage: React.FC<IDetailProps> = (props) => {
+  const { loading } = props
+
   const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false)
 
   const [isVisible, setIsVisible] = useState<boolean>(false)
@@ -67,8 +72,7 @@ export const RegisterPage: React.FC<IDetailProps> = (props) => {
           .oneOf([Yup.ref('password'), null], 'Podane hasło jest niezgodne z powyższym'),
       })}
       onSubmit={(values) => {
-        alert(JSON.stringify(values, null, 2))
-        // props.handleRedirectToApp()
+        props.handleRegister(values)
       }}
     >
       {(formik) => (
@@ -140,7 +144,10 @@ export const RegisterPage: React.FC<IDetailProps> = (props) => {
           >
             <div className="title">
               <span className="label">Powtórz hasło</span>
-              <ErrorMessage name="passwordConfirmation" render={(msg) => <WarningMessage text={msg} />} />
+              <ErrorMessage
+                name="passwordConfirmation"
+                render={(msg) => <WarningMessage text={msg} />}
+              />
             </div>
             <div className="password">
               <Field
@@ -159,9 +166,13 @@ export const RegisterPage: React.FC<IDetailProps> = (props) => {
           <ErrorMessage name="passwordConfirmation" />
 
           <ButtonWrapper>
-            <ButtonLeft disabled={!formik.isValid} isValid={formik.isValid} type="submit">
-              Zarejestruj się
-            </ButtonLeft>
+            {loading ? (
+              <InitSpinner color="#73049f" />
+            ) : (
+              <ButtonLeft disabled={!formik.isValid} isValid={formik.isValid} type="submit">
+                Zarejestruj się
+              </ButtonLeft>
+            )}
 
             <ButtonRight
               onClick={(e) => {

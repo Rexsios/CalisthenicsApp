@@ -2,6 +2,8 @@ import styled, { keyframes } from 'styled-components'
 import { constants } from '../../const.styles'
 import { Form } from 'formik'
 
+import {SpinnerForExerciseInfoPanel} from '../UI/SpinnerForExerciseInfoPanel/SpinnerForExerciseInfoPanel'
+
 export const StyledForm = styled(Form)`
   width: 100%;
   display: flex;
@@ -259,3 +261,8 @@ export const ButtonRight = styled.button`
     margin-left: 10px;
   }
 `
+
+export const InitSpinner = styled(SpinnerForExerciseInfoPanel)`
+margin:0 auto;
+color:${constants.mainColor2};
+width:30%;`

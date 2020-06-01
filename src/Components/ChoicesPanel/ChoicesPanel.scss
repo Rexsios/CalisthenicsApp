@@ -1,22 +1,33 @@
-@import "../../index.scss";
+@import '../../index.scss';
 
 .choicesPanel {
   @include mainContainer();
 
   &__title {
     margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid white;
+    padding-bottom:10px;
 
     &__text {
       text-align: center;
       @include centerDiv();
       width: 90%;
-      border-bottom: 1px solid white;
       margin: 0 auto;
-      padding-bottom: 20px;
     }
 
     &__icon {
       margin-left: 20px;
+    }
+
+    &__logOut{
+      height:100%;
+      font-size:20px;
+      font-family: 'Poppins';
+      font-weight: 700;
+      @include button();
     }
   }
 }
