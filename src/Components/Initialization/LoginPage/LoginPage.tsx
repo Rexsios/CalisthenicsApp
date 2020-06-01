@@ -53,9 +53,9 @@ export const LoginPage: React.FC<IDetailProps> = (props) => {
         password: '',
       }}
       validationSchema={Yup.object({
-        email: Yup.string().email('Invalid email adress').required('Pole jest wymagane'),
+        email: Yup.string().email('Niepoprawny adres email').required('Pole jest wymagane'),
         password: Yup.string()
-          .max(20, 'Must be 20 characters or less')
+          .max(20, 'Maksymalna ilość to 20 znaków')
           .min(6, 'Hasło musi składać się z conajmniej 6 znaków')
           .required('Pole jest wymagane'),
       })}

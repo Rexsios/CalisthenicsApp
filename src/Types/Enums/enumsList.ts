@@ -25,3 +25,10 @@ export enum Links {
   APP = '/aplikacja',
   REGISTER = '/rejestracja',
 }
+
+export enum LocalStorageAuth {
+  TOKEN = 'userToken',
+  UID = 'userUid',
+  DATABASEID = 'userDatabaseId',
+  EXPTIME = 'expirationData'
+}

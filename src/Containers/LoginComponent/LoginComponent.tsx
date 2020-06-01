@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import axios from 'axios'
 import WorkoutMethods from '../../Types/Classes/WorkoutMethods'
-import { WhichWorkout, Links, MessageType } from '../../Types/Enums/enumsList'
+import { WhichWorkout, Links, MessageType, LocalStorageAuth } from '../../Types/Enums/enumsList'
 import { BrowserRouter, Switch, Route, RouteComponentProps, Redirect } from 'react-router-dom'
 import { LoginPage } from '../../Components/Initialization/LoginPage/LoginPage'
 import { StyledWrapper, StyledImageWrapper, StyledFormWrapper } from './LoginComponent.styles'
@@ -65,9 +65,14 @@ export default class LoginComponent extends Component<IDetailProps, IDetailState
       })
       const userDatabaseId = singleElement.id
 
-      this.context.handleLogin(userDatabaseId, googleData.localId, googleData.idToken)
+      const expirationData = new Date(new Date().getTime() + googleData.expiresIn * 1000)
+      localStorage.setItem(LocalStorageAuth.TOKEN, googleData.idToken)
+      localStorage.setItem(LocalStorageAuth.UID, googleData.localId)
+      localStorage.setItem(LocalStorageAuth.DATABASEID, userDatabaseId)
+      localStorage.setItem(LocalStorageAuth.EXPTIME, expirationData.toString())
 
-      this.setState({ loading: false, redirect: true })
+      this.context.handleLogin(userDatabaseId, googleData.localId, googleData.idToken)
+      
     } catch (e) {
       if (e.response.status === 400) {
         this.setState({

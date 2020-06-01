@@ -1,27 +1,27 @@
-import React, { useContext } from "react"
-import "./ChoicesPanel.scss"
-import { Container, Row, Col } from "react-bootstrap"
+import React, { useContext } from 'react'
+import './ChoicesPanel.scss'
+import { Container, Row, Col } from 'react-bootstrap'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faHandPointer } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHandPointer } from '@fortawesome/free-solid-svg-icons'
 
-import { RouteComponentProps } from "react-router-dom"
+import { RouteComponentProps } from 'react-router-dom'
 
-import SinglePanel from "./SinglePanel/SinglePanel"
-import { Links } from "../../Types/Enums/enumsList"
+import SinglePanel from './SinglePanel/SinglePanel'
+import { Links } from '../../Types/Enums/enumsList'
 import AuthContext from '../../context/auth-context'
 
 interface IDetailProps extends RouteComponentProps {}
 
 const ChoicesPanel: React.FC<IDetailProps> = (props) => {
-  const title = ["Ćwiczenia", "Poodgląd ćwiczeń", "Progress"]
+  const title = ['Ćwiczenia', 'Poodgląd ćwiczeń', 'Progress']
   const description = [
-    "Zapisz swoje postępy i zobacz co dziś należy ćwiczyć.",
-    "Przeglądaj wszystykie dostępne ćwiczenia z kalisteniki. Sprawdź co robisz źle oraz jak należy poprawić wykonywane ćwiczenie.",
-    "Sprawdź jak idzie twój plan treningowy. Zobacz swój rozwój na wykresie wraz z wszystkimi wpadkami.",
+    'Zapisz swoje postępy i zobacz co dziś należy ćwiczyć.',
+    'Przeglądaj wszystykie dostępne ćwiczenia z kalisteniki. Sprawdź co robisz źle oraz jak należy poprawić wykonywane ćwiczenie.',
+    'Sprawdź jak idzie twój plan treningowy. Zobacz swój rozwój na wykresie wraz z wszystkimi wpadkami.',
   ]
 
-  const context = useContext(AuthContext);
+  const context = useContext(AuthContext)
 
   return (
     <Container className="choicesPanel">
@@ -31,7 +31,9 @@ const ChoicesPanel: React.FC<IDetailProps> = (props) => {
             Panel wyboru
             <FontAwesomeIcon icon={faHandPointer} className="choicesPanel__title__icon" />
           </h1>
-          <button onClick={context.handleLogout} className="choicesPanel__title__logOut">Wyloguj</button>
+          <button onClick={context.handleLogout} className="choicesPanel__title__logOut">
+            Wyloguj
+          </button>
         </Col>
       </Row>
       <Row className="choicesPanel__choices">

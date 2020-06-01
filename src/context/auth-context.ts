@@ -6,7 +6,7 @@ const authContext = React.createContext({
   userUid: null,
   userToken: null,
   userAuthQuery: '',
-  handleLogin: (userDatabaseId: string, userUid: string, userToken: null) => {},
+  handleLogin: (userDatabaseId: string, userUid: string, userToken: string) => {},
   handleLogout: () => {}
 })
 
