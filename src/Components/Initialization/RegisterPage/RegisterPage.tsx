@@ -163,7 +163,6 @@ export const RegisterPage: React.FC<IDetailProps> = (props) => {
               />
             </div>
           </StyledInput>
-          <ErrorMessage name="passwordConfirmation" />
 
           <ButtonWrapper>
             {loading ? (

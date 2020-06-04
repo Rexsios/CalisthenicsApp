@@ -56,6 +56,15 @@ export interface RegisterData {
 }
 
 export interface IdToUid {
-  id:string
-  uid:string
+  id: string
+  uid: string
+}
+
+export interface GoogleData {
+  email: string
+  expiresIn: string
+  idToken: string
+  kind: string
+  localId: string
+  refreshToken: string
 }

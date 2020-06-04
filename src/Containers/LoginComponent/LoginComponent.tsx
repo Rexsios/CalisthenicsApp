@@ -1,22 +1,21 @@
 import React, { Component } from 'react'
 
 import axios from 'axios'
-import WorkoutMethods from '../../Types/Classes/WorkoutMethods'
-import { WhichWorkout, Links, MessageType, LocalStorageAuth } from '../../Types/Enums/enumsList'
-import { BrowserRouter, Switch, Route, RouteComponentProps, Redirect } from 'react-router-dom'
+import { Links, MessageType, LocalStorageAuth } from '../../Types/Enums/enumsList'
+import { BrowserRouter, Switch, Route, RouteComponentProps } from 'react-router-dom'
 import { LoginPage } from '../../Components/Initialization/LoginPage/LoginPage'
 import { StyledWrapper, StyledImageWrapper, StyledFormWrapper } from './LoginComponent.styles'
 import { RegisterPage } from '../../Components/Initialization/RegisterPage/RegisterPage'
-import { LoginData, RegisterData, IdToUid } from '../../Types/Interfaces/InterfecesList'
+import { LoginData, RegisterData, IdToUid, GoogleData } from '../../Types/Interfaces/InterfecesList'
 import { googleKey } from '../../googleApiKey'
 import AuthContext from '../../context/auth-context'
 
 import MessageBox from '../../Components/UI/MessageBoxHoc/MessageBox'
+import SignUpUsers from '../../Types/Classes/SignUpUsers'
 
 interface IDetailProps extends RouteComponentProps {}
 
 interface IDetailState {
-  redirect: boolean
   loading: boolean
   messageType?: {
     text: string
@@ -26,7 +25,6 @@ interface IDetailState {
 
 export default class LoginComponent extends Component<IDetailProps, IDetailState> {
   state = {
-    redirect: false,
     loading: false,
     messageType: { text: '', type: MessageType.GOOD },
     isMessageBoxVisible: false,
@@ -34,8 +32,14 @@ export default class LoginComponent extends Component<IDetailProps, IDetailState
 
   static contextType = AuthContext
 
-  handleRedirectToApp = () => {
-    this.setState({ redirect: true })
+  messageToUser = (loadingStatus: boolean, messageType: MessageType, text: string) => {
+    this.setState({
+      loading: loadingStatus,
+      messageType: {
+        text: text,
+        type: messageType,
+      },
+    })
   }
 
   handleLogin = async (values: LoginData) => {
@@ -54,12 +58,12 @@ export default class LoginComponent extends Component<IDetailProps, IDetailState
           )
           .then((response) => response.data),
         axios
-          .get<IdToUid>('https://sportplan-addc3.firebaseio.com/IdToUid.json')
+          .get<IdToUid[]>('https://sportplan-addc3.firebaseio.com/IdToUid.json')
           .then((response) => response.data),
       ]
       const [googleData, idToUidData] = await Promise.all(userData)
 
-      let singleElement = idToUidData.find((item: IdToUid) => {
+      let singleElement: any = Object.values(idToUidData as IdToUid[]).find((item) => {
         if (item.uid === googleData.localId) return true
         return false
       })
@@ -72,100 +76,86 @@ export default class LoginComponent extends Component<IDetailProps, IDetailState
       localStorage.setItem(LocalStorageAuth.EXPTIME, expirationData.toString())
 
       this.context.handleLogin(userDatabaseId, googleData.localId, googleData.idToken)
-      
     } catch (e) {
-      if (e.response.status === 400) {
-        this.setState({
-          loading: false,
-          messageType: { type: MessageType.BAD, text: 'Błędny login bądź hasło' },
-        })
+      if (e.response) {
+        switch (e.response.data.error.message) {
+          case 'EMAIL_NOT_FOUND':
+            this.messageToUser(false, MessageType.BAD, 'Podany login bądź hasło są nieprawidłowe')
+            break
+          case 'INVALID_PASSWORD':
+            this.messageToUser(false, MessageType.BAD, 'Podany login bądź hasło są nieprawidłowe')
+            break
+          case 'USER_DISABLED':
+            this.messageToUser(
+              false,
+              MessageType.BAD,
+              'Użytkownik został zablokowany przez administratora'
+            )
+            break
+          default:
+            this.messageToUser(false, MessageType.BAD, 'Coś poszło nie tak')
+        }
       } else {
-        this.setState({
-          loading: false,
-          messageType: { type: MessageType.BAD, text: 'Coś poszło nie tak' },
-        })
+        this.messageToUser(false, MessageType.BAD, 'Coś poszło nie tak')
       }
     }
   }
 
-  handleRegister = (values: RegisterData) => {
-    //this.setState({ redirect: true })
-  }
-  createUser = () => {
-    const user = {
-      name: 'Slawko',
-      surname: 'Palka',
-      password: '123',
-      workoutType: {
-        bridge: WorkoutMethods.createSingleWorkoutObject(
-          WhichWorkout.BRIDGE,
-          1,
-          'Mostek',
-          [0, 0],
-          [0, 0]
-        ),
-        legRaising: WorkoutMethods.createSingleWorkoutObject(
-          WhichWorkout.LEGRAISING,
-          1,
-          'Unoszenie nóg',
-          [0, 0],
-          [0, 0]
-        ),
-        pushUps: WorkoutMethods.createSingleWorkoutObject(
-          WhichWorkout.PUSHUPS,
-          1,
-          'Pompki',
-          [0, 0],
-          [0, 0]
-        ),
-        pushUpsOnHands: WorkoutMethods.createSingleWorkoutObject(
-          WhichWorkout.PUSHUPSONHANDS,
-          1,
-          'Pompki na rękach',
-          [0, 0],
-          [0, 0]
-        ),
-        pullUps: WorkoutMethods.createSingleWorkoutObject(
-          WhichWorkout.PULLUPS,
-          1,
-          'Podciąganie',
-          [0, 0],
-          [0, 0]
-        ),
-        squads: WorkoutMethods.createSingleWorkoutObject(
-          WhichWorkout.SQUADS,
-          1,
-          'Przysiady',
-          [0, 0],
-          [0, 0]
-        ),
-      },
-      workoutTypeHistory: {
-        bridge: {
-          id: WhichWorkout.BRIDGE,
-        },
-        legRaising: {
-          id: WhichWorkout.LEGRAISING,
-        },
-        pushUps: {
-          id: WhichWorkout.PUSHUPS,
-        },
-        pushUpsOnHands: {
-          id: WhichWorkout.PUSHUPSONHANDS,
-        },
-        pullUps: {
-          id: WhichWorkout.PULLUPS,
-        },
-        squads: {
-          id: WhichWorkout.SQUADS,
-        },
-      },
+  handleRegister = async (values: RegisterData) => {
+    this.setState({ loading: true })
+    const signInValues = {
+      email: values.email,
+      password: values.password,
+      returnSecureToken: true,
     }
-    axios.post('https://sportplan-addc3.firebaseio.com/Users.json', user)
+    try {
+      const newUser = await axios
+        .post<GoogleData>(
+          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${googleKey.apiKey}`,
+          signInValues
+        )
+        .then((response) => response.data)
+
+      const queryToFirebase = `?auth=${newUser.idToken}`
+
+      const newUserInDatabase = SignUpUsers.createUser(values.userName)
+
+      const dataId = await axios
+        .post(
+          `https://sportplan-addc3.firebaseio.com/Users.json${queryToFirebase}`,
+          newUserInDatabase
+        )
+        .then((response) => response.data.name)
+
+      const connectUidAndDataId = {
+        id: dataId,
+        uid: newUser.localId,
+      }
+
+      await axios.post(
+        `https://sportplan-addc3.firebaseio.com/IdToUid.json${queryToFirebase}`,
+        connectUidAndDataId
+      )
+      this.messageToUser(false, MessageType.GOOD, 'Pomyślnie zarejestrowano w bazie danych. Możesz się zalogować!')
+    } catch (e) {
+      if (e.response) {
+        switch (e.response.data.error.message) {
+          case 'EMAIL_EXISTS':
+            this.messageToUser(false, MessageType.BAD, 'Podany email istnieje w bazie danych')
+            break
+          case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+            this.messageToUser(false, MessageType.BAD, 'Zbyt dużo prób logowania. Spróbuj później')
+            break
+          default:
+            this.messageToUser(false, MessageType.BAD, 'Coś poszło nie tak')
+        }
+      } else {
+        this.messageToUser(false, MessageType.BAD, 'Coś poszło nie tak')
+      }
+    }
   }
 
   render() {
-    if (this.state.redirect) return <Redirect to={Links.APP} />
     return (
       <StyledWrapper>
         <StyledImageWrapper></StyledImageWrapper>
